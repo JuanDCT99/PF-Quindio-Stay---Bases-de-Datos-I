@@ -1,29 +1,46 @@
+
 package model;
 
 import java.time.LocalDateTime;
 
 public class Alojamiento {
+
     private Long idAlojamiento;
     private String nombreAlojamiento;
     private String nit;
     private String direccion;
-    private String telefono;
     private String aceptaMascotas;
     private LocalDateTime horaSalidaLimite;
     private Integer plazoConfirmacionHoras;
+    private Long idMunicipio;
 
     public Alojamiento() {
     }
 
-    public Alojamiento(Long idAlojamiento, String nombreAlojamiento, String nit, String direccion, String telefono, String aceptaMascotas, LocalDateTime horaSalidaLimite, Integer plazoConfirmacionHoras) {
+    public Alojamiento(Long idAlojamiento, String nombreAlojamiento,
+                       String nit, String direccion, String aceptaMascotas,
+                       LocalDateTime horaSalidaLimite,
+                       Integer plazoConfirmacionHoras, Long idMunicipio) {
+
         this.idAlojamiento = idAlojamiento;
         this.nombreAlojamiento = nombreAlojamiento;
         this.nit = nit;
         this.direccion = direccion;
-        this.telefono = telefono;
         this.aceptaMascotas = aceptaMascotas;
         this.horaSalidaLimite = horaSalidaLimite;
         this.plazoConfirmacionHoras = plazoConfirmacionHoras;
+        this.idMunicipio = idMunicipio;
+    }
+
+    public boolean esValido() {
+        return nombreAlojamiento != null && !nombreAlojamiento.isBlank()
+                && nit != null && !nit.isBlank()
+                && direccion != null && !direccion.isBlank()
+                && ("S".equals(aceptaMascotas) || "N".equals(aceptaMascotas))
+                && horaSalidaLimite != null
+                && plazoConfirmacionHoras != null
+                && plazoConfirmacionHoras > 0
+                && idMunicipio != null;
     }
 
     public Long getIdAlojamiento() {
@@ -58,14 +75,6 @@ public class Alojamiento {
         this.direccion = direccion;
     }
 
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
     public String getAceptaMascotas() {
         return aceptaMascotas;
     }
@@ -88,5 +97,13 @@ public class Alojamiento {
 
     public void setPlazoConfirmacionHoras(Integer plazoConfirmacionHoras) {
         this.plazoConfirmacionHoras = plazoConfirmacionHoras;
+    }
+
+    public Long getIdMunicipio() {
+        return idMunicipio;
+    }
+
+    public void setIdMunicipio(Long idMunicipio) {
+        this.idMunicipio = idMunicipio;
     }
 }

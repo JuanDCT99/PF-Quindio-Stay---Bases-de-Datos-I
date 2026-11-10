@@ -1,8 +1,10 @@
+
 package model;
 
 import java.time.LocalDateTime;
 
 public class UsoServicio {
+
     private Long idUsoServicio;
     private LocalDateTime fechaHoraInicio;
     private LocalDateTime fechaHoraFin;
@@ -14,7 +16,10 @@ public class UsoServicio {
     public UsoServicio() {
     }
 
-    public UsoServicio(Long idUsoServicio, LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin, String solicitud, Long idReservaHabitacion, Long idServicio, Long idPersonal) {
+    public UsoServicio(Long idUsoServicio, LocalDateTime fechaHoraInicio,
+                       LocalDateTime fechaHoraFin, String solicitud,
+                       Long idReservaHabitacion, Long idServicio, Long idPersonal) {
+
         this.idUsoServicio = idUsoServicio;
         this.fechaHoraInicio = fechaHoraInicio;
         this.fechaHoraFin = fechaHoraFin;
@@ -24,59 +29,32 @@ public class UsoServicio {
         this.idPersonal = idPersonal;
     }
 
-    public Long getIdUsoServicio() {
-        return idUsoServicio;
+    public boolean esValido() {
+        return fechaHoraInicio != null && fechaHoraFin != null
+                && !fechaHoraFin.isBefore(fechaHoraInicio)
+                && (solicitud == null || solicitud.length() <= 500)
+                && idReservaHabitacion != null
+                && idServicio != null;
     }
 
-    public void setIdUsoServicio(Long idUsoServicio) {
-        this.idUsoServicio = idUsoServicio;
-    }
+    public Long getIdUsoServicio() { return idUsoServicio; }
+    public void setIdUsoServicio(Long idUsoServicio) { this.idUsoServicio = idUsoServicio; }
 
-    public LocalDateTime getFechaHoraInicio() {
-        return fechaHoraInicio;
-    }
+    public LocalDateTime getFechaHoraInicio() { return fechaHoraInicio; }
+    public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) { this.fechaHoraInicio = fechaHoraInicio; }
 
-    public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
-        this.fechaHoraInicio = fechaHoraInicio;
-    }
+    public LocalDateTime getFechaHoraFin() { return fechaHoraFin; }
+    public void setFechaHoraFin(LocalDateTime fechaHoraFin) { this.fechaHoraFin = fechaHoraFin; }
 
-    public LocalDateTime getFechaHoraFin() {
-        return fechaHoraFin;
-    }
+    public String getSolicitud() { return solicitud; }
+    public void setSolicitud(String solicitud) { this.solicitud = solicitud; }
 
-    public void setFechaHoraFin(LocalDateTime fechaHoraFin) {
-        this.fechaHoraFin = fechaHoraFin;
-    }
+    public Long getIdReservaHabitacion() { return idReservaHabitacion; }
+    public void setIdReservaHabitacion(Long idReservaHabitacion) { this.idReservaHabitacion = idReservaHabitacion; }
 
-    public String getSolicitud() {
-        return solicitud;
-    }
+    public Long getIdServicio() { return idServicio; }
+    public void setIdServicio(Long idServicio) { this.idServicio = idServicio; }
 
-    public void setSolicitud(String solicitud) {
-        this.solicitud = solicitud;
-    }
-
-    public Long getIdReservaHabitacion() {
-        return idReservaHabitacion;
-    }
-
-    public void setIdReservaHabitacion(Long idReservaHabitacion) {
-        this.idReservaHabitacion = idReservaHabitacion;
-    }
-
-    public Long getIdServicio() {
-        return idServicio;
-    }
-
-    public void setIdServicio(Long idServicio) {
-        this.idServicio = idServicio;
-    }
-
-    public Long getIdPersonal() {
-        return idPersonal;
-    }
-
-    public void setIdPersonal(Long idPersonal) {
-        this.idPersonal = idPersonal;
-    }
+    public Long getIdPersonal() { return idPersonal; }
+    public void setIdPersonal(Long idPersonal) { this.idPersonal = idPersonal; }
 }

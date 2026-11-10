@@ -1,8 +1,10 @@
+
 package model;
 
 import java.time.LocalDateTime;
 
 public class Calificacion {
+
     private Long idCalificacion;
     private Integer puntuacion;
     private String comentario;
@@ -13,7 +15,10 @@ public class Calificacion {
     public Calificacion() {
     }
 
-    public Calificacion(Long idCalificacion, Integer puntuacion, String comentario, LocalDateTime fechaCalificacion, Long idHuesped, Long idReserva) {
+    public Calificacion(Long idCalificacion, Integer puntuacion,
+                        String comentario, LocalDateTime fechaCalificacion,
+                        Long idHuesped, Long idReserva) {
+
         this.idCalificacion = idCalificacion;
         this.puntuacion = puntuacion;
         this.comentario = comentario;
@@ -22,51 +27,30 @@ public class Calificacion {
         this.idReserva = idReserva;
     }
 
-    public Long getIdCalificacion() {
-        return idCalificacion;
+    public boolean esValido() {
+        return puntuacion != null
+                && puntuacion >= 0 && puntuacion <= 99
+                && (comentario == null || comentario.length() <= 1000)
+                && fechaCalificacion != null
+                && idHuesped != null
+                && idReserva != null;
     }
 
-    public void setIdCalificacion(Long idCalificacion) {
-        this.idCalificacion = idCalificacion;
-    }
+    public Long getIdCalificacion() { return idCalificacion; }
+    public void setIdCalificacion(Long idCalificacion) { this.idCalificacion = idCalificacion; }
 
-    public Integer getPuntuacion() {
-        return puntuacion;
-    }
+    public Integer getPuntuacion() { return puntuacion; }
+    public void setPuntuacion(Integer puntuacion) { this.puntuacion = puntuacion; }
 
-    public void setPuntuacion(Integer puntuacion) {
-        this.puntuacion = puntuacion;
-    }
+    public String getComentario() { return comentario; }
+    public void setComentario(String comentario) { this.comentario = comentario; }
 
-    public String getComentario() {
-        return comentario;
-    }
+    public LocalDateTime getFechaCalificacion() { return fechaCalificacion; }
+    public void setFechaCalificacion(LocalDateTime fechaCalificacion) { this.fechaCalificacion = fechaCalificacion; }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
-    }
+    public Long getIdHuesped() { return idHuesped; }
+    public void setIdHuesped(Long idHuesped) { this.idHuesped = idHuesped; }
 
-    public LocalDateTime getFechaCalificacion() {
-        return fechaCalificacion;
-    }
-
-    public void setFechaCalificacion(LocalDateTime fechaCalificacion) {
-        this.fechaCalificacion = fechaCalificacion;
-    }
-
-    public Long getIdHuesped() {
-        return idHuesped;
-    }
-
-    public void setIdHuesped(Long idHuesped) {
-        this.idHuesped = idHuesped;
-    }
-
-    public Long getIdReserva() {
-        return idReserva;
-    }
-
-    public void setIdReserva(Long idReserva) {
-        this.idReserva = idReserva;
-    }
+    public Long getIdReserva() { return idReserva; }
+    public void setIdReserva(Long idReserva) { this.idReserva = idReserva; }
 }

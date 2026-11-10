@@ -1,3 +1,4 @@
+
 package model;
 
 import java.math.BigDecimal;
@@ -5,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class ReservaHabitacion {
+
     private Long idReservaHabitacion;
     private LocalDate fechaEntradaReservada;
     private LocalDate fechaSalidaReservada;
@@ -18,7 +20,11 @@ public class ReservaHabitacion {
     public ReservaHabitacion() {
     }
 
-    public ReservaHabitacion(Long idReservaHabitacion, LocalDate fechaEntradaReservada, LocalDate fechaSalidaReservada, BigDecimal precioNochePactado, LocalDateTime checkinReal, LocalDateTime checkoutReal, Integer nochesAdicionales, Long idReserva, Long idHabitacion) {
+    public ReservaHabitacion(Long idReservaHabitacion, LocalDate fechaEntradaReservada,
+                             LocalDate fechaSalidaReservada, BigDecimal precioNochePactado,
+                             LocalDateTime checkinReal, LocalDateTime checkoutReal,
+                             Integer nochesAdicionales, Long idReserva, Long idHabitacion) {
+
         this.idReservaHabitacion = idReservaHabitacion;
         this.fechaEntradaReservada = fechaEntradaReservada;
         this.fechaSalidaReservada = fechaSalidaReservada;
@@ -30,75 +36,44 @@ public class ReservaHabitacion {
         this.idHabitacion = idHabitacion;
     }
 
-    public Long getIdReservaHabitacion() {
-        return idReservaHabitacion;
+    public boolean esValido() {
+        return fechaEntradaReservada != null
+                && fechaSalidaReservada != null
+                && !fechaSalidaReservada.isBefore(fechaEntradaReservada)
+                && precioNochePactado != null
+                && precioNochePactado.compareTo(BigDecimal.ZERO) > 0
+                && nochesAdicionales != null
+                && nochesAdicionales >= 0
+                && idReserva != null
+                && idHabitacion != null
+                && (checkinReal == null || !checkinReal.isBefore(fechaEntradaReservada.atStartOfDay()))
+                && (checkoutReal == null || checkinReal == null || !checkoutReal.isBefore(checkinReal));
     }
 
-    public void setIdReservaHabitacion(Long idReservaHabitacion) {
-        this.idReservaHabitacion = idReservaHabitacion;
-    }
+    public Long getIdReservaHabitacion() { return idReservaHabitacion; }
+    public void setIdReservaHabitacion(Long idReservaHabitacion) { this.idReservaHabitacion = idReservaHabitacion; }
 
-    public LocalDate getFechaEntradaReservada() {
-        return fechaEntradaReservada;
-    }
+    public LocalDate getFechaEntradaReservada() { return fechaEntradaReservada; }
+    public void setFechaEntradaReservada(LocalDate fechaEntradaReservada) { this.fechaEntradaReservada = fechaEntradaReservada; }
 
-    public void setFechaEntradaReservada(LocalDate fechaEntradaReservada) {
-        this.fechaEntradaReservada = fechaEntradaReservada;
-    }
+    public LocalDate getFechaSalidaReservada() { return fechaSalidaReservada; }
+    public void setFechaSalidaReservada(LocalDate fechaSalidaReservada) { this.fechaSalidaReservada = fechaSalidaReservada; }
 
-    public LocalDate getFechaSalidaReservada() {
-        return fechaSalidaReservada;
-    }
+    public BigDecimal getPrecioNochePactado() { return precioNochePactado; }
+    public void setPrecioNochePactado(BigDecimal precioNochePactado) { this.precioNochePactado = precioNochePactado; }
 
-    public void setFechaSalidaReservada(LocalDate fechaSalidaReservada) {
-        this.fechaSalidaReservada = fechaSalidaReservada;
-    }
+    public LocalDateTime getCheckinReal() { return checkinReal; }
+    public void setCheckinReal(LocalDateTime checkinReal) { this.checkinReal = checkinReal; }
 
-    public BigDecimal getPrecioNochePactado() {
-        return precioNochePactado;
-    }
+    public LocalDateTime getCheckoutReal() { return checkoutReal; }
+    public void setCheckoutReal(LocalDateTime checkoutReal) { this.checkoutReal = checkoutReal; }
 
-    public void setPrecioNochePactado(BigDecimal precioNochePactado) {
-        this.precioNochePactado = precioNochePactado;
-    }
+    public Integer getNochesAdicionales() { return nochesAdicionales; }
+    public void setNochesAdicionales(Integer nochesAdicionales) { this.nochesAdicionales = nochesAdicionales; }
 
-    public LocalDateTime getCheckinReal() {
-        return checkinReal;
-    }
+    public Long getIdReserva() { return idReserva; }
+    public void setIdReserva(Long idReserva) { this.idReserva = idReserva; }
 
-    public void setCheckinReal(LocalDateTime checkinReal) {
-        this.checkinReal = checkinReal;
-    }
-
-    public LocalDateTime getCheckoutReal() {
-        return checkoutReal;
-    }
-
-    public void setCheckoutReal(LocalDateTime checkoutReal) {
-        this.checkoutReal = checkoutReal;
-    }
-
-    public Integer getNochesAdicionales() {
-        return nochesAdicionales;
-    }
-
-    public void setNochesAdicionales(Integer nochesAdicionales) {
-        this.nochesAdicionales = nochesAdicionales;
-    }
-
-    public Long getIdReserva() {
-        return idReserva;
-    }
-
-    public void setIdReserva(Long idReserva) {
-        this.idReserva = idReserva;
-    }
-
-    public Long getIdHabitacion() {
-        return idHabitacion;
-    }
-
-    public void setIdHabitacion(Long idHabitacion) {
-        this.idHabitacion = idHabitacion;
-    }
+    public Long getIdHabitacion() { return idHabitacion; }
+    public void setIdHabitacion(Long idHabitacion) { this.idHabitacion = idHabitacion; }
 }

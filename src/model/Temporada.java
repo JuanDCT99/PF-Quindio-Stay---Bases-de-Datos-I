@@ -1,8 +1,10 @@
+
 package model;
 
 import java.time.LocalDate;
 
 public class Temporada {
+
     private Long idTemporada;
     private String nombreTemporada;
     private Integer anio;
@@ -12,12 +14,28 @@ public class Temporada {
     public Temporada() {
     }
 
-    public Temporada(Long idTemporada, String nombreTemporada, Integer anio, LocalDate fechaInicio, LocalDate fechaFin) {
+    public Temporada(Long idTemporada, String nombreTemporada,
+                     Integer anio, LocalDate fechaInicio,
+                     LocalDate fechaFin) {
+
         this.idTemporada = idTemporada;
         this.nombreTemporada = nombreTemporada;
         this.anio = anio;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+    }
+
+    public boolean esValido() {
+        return nombreTemporada != null
+                && (nombreTemporada.equals("ALTA")
+                || nombreTemporada.equals("MEDIA")
+                || nombreTemporada.equals("BAJA"))
+                && anio != null
+                && anio >= 1000
+                && anio <= 9999
+                && fechaInicio != null
+                && fechaFin != null
+                && !fechaFin.isBefore(fechaInicio);
     }
 
     public Long getIdTemporada() {

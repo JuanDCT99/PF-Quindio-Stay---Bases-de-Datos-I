@@ -1,8 +1,10 @@
+
 package model;
 
 import java.time.LocalDateTime;
 
 public class Bloqueo {
+
     private Long idBloqueo;
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
@@ -13,7 +15,10 @@ public class Bloqueo {
     public Bloqueo() {
     }
 
-    public Bloqueo(Long idBloqueo, LocalDateTime fechaInicio, LocalDateTime fechaFin, String motivo, Long idHabitacion, Long idUsuario) {
+    public Bloqueo(Long idBloqueo, LocalDateTime fechaInicio,
+                   LocalDateTime fechaFin, String motivo,
+                   Long idHabitacion, Long idUsuario) {
+
         this.idBloqueo = idBloqueo;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -22,51 +27,31 @@ public class Bloqueo {
         this.idUsuario = idUsuario;
     }
 
-    public Long getIdBloqueo() {
-        return idBloqueo;
+    public boolean esValido() {
+        return fechaInicio != null
+                && fechaFin != null
+                && !fechaFin.isBefore(fechaInicio)
+                && motivo != null && !motivo.isBlank()
+                && motivo.length() <= 300
+                && idHabitacion != null
+                && idUsuario != null;
     }
 
-    public void setIdBloqueo(Long idBloqueo) {
-        this.idBloqueo = idBloqueo;
-    }
+    public Long getIdBloqueo() { return idBloqueo; }
+    public void setIdBloqueo(Long idBloqueo) { this.idBloqueo = idBloqueo; }
 
-    public LocalDateTime getFechaInicio() {
-        return fechaInicio;
-    }
+    public LocalDateTime getFechaInicio() { return fechaInicio; }
+    public void setFechaInicio(LocalDateTime fechaInicio) { this.fechaInicio = fechaInicio; }
 
-    public void setFechaInicio(LocalDateTime fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
+    public LocalDateTime getFechaFin() { return fechaFin; }
+    public void setFechaFin(LocalDateTime fechaFin) { this.fechaFin = fechaFin; }
 
-    public LocalDateTime getFechaFin() {
-        return fechaFin;
-    }
+    public String getMotivo() { return motivo; }
+    public void setMotivo(String motivo) { this.motivo = motivo; }
 
-    public void setFechaFin(LocalDateTime fechaFin) {
-        this.fechaFin = fechaFin;
-    }
+    public Long getIdHabitacion() { return idHabitacion; }
+    public void setIdHabitacion(Long idHabitacion) { this.idHabitacion = idHabitacion; }
 
-    public String getMotivo() {
-        return motivo;
-    }
-
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
-    }
-
-    public Long getIdHabitacion() {
-        return idHabitacion;
-    }
-
-    public void setIdHabitacion(Long idHabitacion) {
-        this.idHabitacion = idHabitacion;
-    }
-
-    public Long getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Long idUsuario) {
-        this.idUsuario = idUsuario;
-    }
+    public Long getIdUsuario() { return idUsuario; }
+    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
 }

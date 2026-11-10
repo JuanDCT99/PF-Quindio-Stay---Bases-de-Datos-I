@@ -1,6 +1,8 @@
+
 package model;
 
 public class Habitacion {
+
     private Long idHabitacion;
     private String numeroHabitacion;
     private Integer capacidadMaxima;
@@ -12,7 +14,11 @@ public class Habitacion {
     public Habitacion() {
     }
 
-    public Habitacion(Long idHabitacion, String numeroHabitacion, Integer capacidadMaxima, String descripcion, String estadoOperativo, Long idTipoHabitacion, Long idAlojamiento) {
+    public Habitacion(Long idHabitacion, String numeroHabitacion,
+                      Integer capacidadMaxima, String descripcion,
+                      String estadoOperativo, Long idTipoHabitacion,
+                      Long idAlojamiento) {
+
         this.idHabitacion = idHabitacion;
         this.numeroHabitacion = numeroHabitacion;
         this.capacidadMaxima = capacidadMaxima;
@@ -20,6 +26,17 @@ public class Habitacion {
         this.estadoOperativo = estadoOperativo;
         this.idTipoHabitacion = idTipoHabitacion;
         this.idAlojamiento = idAlojamiento;
+    }
+
+    public boolean esValido() {
+        return numeroHabitacion != null
+                && !numeroHabitacion.isBlank()
+                && capacidadMaxima != null
+                && capacidadMaxima > 0
+                && estadoOperativo != null
+                && !estadoOperativo.isBlank()
+                && idTipoHabitacion != null
+                && idAlojamiento != null;
     }
 
     public Long getIdHabitacion() {

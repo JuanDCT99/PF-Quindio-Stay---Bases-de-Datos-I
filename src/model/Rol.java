@@ -1,6 +1,8 @@
+
 package model;
 
 public class Rol {
+
     private Long idRol;
     private String nombreRol;
     private String descripcion;
@@ -14,27 +16,18 @@ public class Rol {
         this.descripcion = descripcion;
     }
 
-    public Long getIdRol() {
-        return idRol;
+    public boolean esValido() {
+        return nombreRol != null && !nombreRol.isBlank()
+                && nombreRol.length() <= 30
+                && (descripcion == null || descripcion.length() <= 200);
     }
 
-    public void setIdRol(Long idRol) {
-        this.idRol = idRol;
-    }
+    public Long getIdRol() { return idRol; }
+    public void setIdRol(Long idRol) { this.idRol = idRol; }
 
-    public String getNombreRol() {
-        return nombreRol;
-    }
+    public String getNombreRol() { return nombreRol; }
+    public void setNombreRol(String nombreRol) { this.nombreRol = nombreRol; }
 
-    public void setNombreRol(String nombreRol) {
-        this.nombreRol = nombreRol;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 }

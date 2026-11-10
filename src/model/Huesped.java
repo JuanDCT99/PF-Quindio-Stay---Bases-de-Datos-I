@@ -1,8 +1,10 @@
+
 package model;
 
 import java.time.LocalDate;
 
 public class Huesped {
+
     private Long idHuesped;
     private String nombre;
     private String documento;
@@ -14,7 +16,10 @@ public class Huesped {
     public Huesped() {
     }
 
-    public Huesped(Long idHuesped, String nombre, String documento, LocalDate fechaNacimiento, String direccion, String correo, String telefono) {
+    public Huesped(Long idHuesped, String nombre, String documento,
+                   LocalDate fechaNacimiento, String direccion,
+                   String correo, String telefono) {
+
         this.idHuesped = idHuesped;
         this.nombre = nombre;
         this.documento = documento;
@@ -22,6 +27,19 @@ public class Huesped {
         this.direccion = direccion;
         this.correo = correo;
         this.telefono = telefono;
+    }
+
+    public boolean esValido() {
+        return nombre != null
+                && !nombre.isBlank()
+                && nombre.length() <= 80
+                && documento != null
+                && !documento.isBlank()
+                && documento.length() <= 25
+                && fechaNacimiento != null
+                && (direccion == null || direccion.length() <= 200)
+                && (correo == null || correo.length() <= 120)
+                && (telefono == null || telefono.length() <= 25);
     }
 
     public Long getIdHuesped() {

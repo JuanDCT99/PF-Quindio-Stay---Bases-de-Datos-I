@@ -1,8 +1,10 @@
+
 package model;
 
 import java.math.BigDecimal;
 
 public class Personal {
+
     private Long idPersonal;
     private String nombre;
     private String funcion;
@@ -14,7 +16,9 @@ public class Personal {
     public Personal() {
     }
 
-    public Personal(Long idPersonal, String nombre, String funcion, String cargo, BigDecimal salario, String horarioTrabajo, Long idAlojamiento) {
+    public Personal(Long idPersonal, String nombre, String funcion, String cargo,
+                    BigDecimal salario, String horarioTrabajo, Long idAlojamiento) {
+
         this.idPersonal = idPersonal;
         this.nombre = nombre;
         this.funcion = funcion;
@@ -24,59 +28,34 @@ public class Personal {
         this.idAlojamiento = idAlojamiento;
     }
 
-    public Long getIdPersonal() {
-        return idPersonal;
+    public boolean esValido() {
+        return nombre != null && !nombre.isBlank() && nombre.length() <= 120
+                && funcion != null && !funcion.isBlank() && funcion.length() <= 100
+                && cargo != null && !cargo.isBlank() && cargo.length() <= 60
+                && salario != null && salario.compareTo(BigDecimal.ZERO) >= 0
+                && horarioTrabajo != null && !horarioTrabajo.isBlank()
+                && horarioTrabajo.length() <= 100
+                && idAlojamiento != null;
     }
 
-    public void setIdPersonal(Long idPersonal) {
-        this.idPersonal = idPersonal;
-    }
+    public Long getIdPersonal() { return idPersonal; }
+    public void setIdPersonal(Long idPersonal) { this.idPersonal = idPersonal; }
 
-    public String getNombre() {
-        return nombre;
-    }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
+    public String getFuncion() { return funcion; }
+    public void setFuncion(String funcion) { this.funcion = funcion; }
 
-    public String getFuncion() {
-        return funcion;
-    }
+    public String getCargo() { return cargo; }
+    public void setCargo(String cargo) { this.cargo = cargo; }
 
-    public void setFuncion(String funcion) {
-        this.funcion = funcion;
-    }
+    public BigDecimal getSalario() { return salario; }
+    public void setSalario(BigDecimal salario) { this.salario = salario; }
 
-    public String getCargo() {
-        return cargo;
-    }
+    public String getHorarioTrabajo() { return horarioTrabajo; }
+    public void setHorarioTrabajo(String horarioTrabajo) { this.horarioTrabajo = horarioTrabajo; }
 
-    public void setCargo(String cargo) {
-        this.cargo = cargo;
-    }
-
-    public BigDecimal getSalario() {
-        return salario;
-    }
-
-    public void setSalario(BigDecimal salario) {
-        this.salario = salario;
-    }
-
-    public String getHorarioTrabajo() {
-        return horarioTrabajo;
-    }
-
-    public void setHorarioTrabajo(String horarioTrabajo) {
-        this.horarioTrabajo = horarioTrabajo;
-    }
-
-    public Long getIdAlojamiento() {
-        return idAlojamiento;
-    }
-
-    public void setIdAlojamiento(Long idAlojamiento) {
-        this.idAlojamiento = idAlojamiento;
-    }
+    public Long getIdAlojamiento() { return idAlojamiento; }
+    public void setIdAlojamiento(Long idAlojamiento) { this.idAlojamiento = idAlojamiento; }
 }

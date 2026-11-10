@@ -1,8 +1,10 @@
+
 package model;
 
 import java.math.BigDecimal;
 
 public class Intermediario {
+
     private Long idIntermediario;
     private String nombreIntermediario;
     private BigDecimal porcentajeComision;
@@ -12,12 +14,30 @@ public class Intermediario {
     public Intermediario() {
     }
 
-    public Intermediario(Long idIntermediario, String nombreIntermediario, BigDecimal porcentajeComision, String tipoCanal, String emailContacto) {
+    public Intermediario(Long idIntermediario,
+                         String nombreIntermediario,
+                         BigDecimal porcentajeComision,
+                         String tipoCanal,
+                         String emailContacto) {
+
         this.idIntermediario = idIntermediario;
         this.nombreIntermediario = nombreIntermediario;
         this.porcentajeComision = porcentajeComision;
         this.tipoCanal = tipoCanal;
         this.emailContacto = emailContacto;
+    }
+
+    public boolean esValido() {
+        return nombreIntermediario != null
+                && !nombreIntermediario.isBlank()
+                && nombreIntermediario.length() <= 120
+                && porcentajeComision != null
+                && porcentajeComision.compareTo(BigDecimal.ZERO) >= 0
+                && porcentajeComision.compareTo(new BigDecimal("30")) <= 0
+                && tipoCanal != null
+                && !tipoCanal.isBlank()
+                && tipoCanal.length() <= 30
+                && (emailContacto == null || emailContacto.length() <= 120);
     }
 
     public Long getIdIntermediario() {

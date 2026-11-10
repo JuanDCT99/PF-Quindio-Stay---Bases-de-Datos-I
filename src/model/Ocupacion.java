@@ -1,6 +1,8 @@
+
 package model;
 
 public class Ocupacion {
+
     private Long idReservaHabitacion;
     private Long idHuesped;
     private String rol;
@@ -14,27 +16,18 @@ public class Ocupacion {
         this.rol = rol;
     }
 
-    public Long getIdReservaHabitacion() {
-        return idReservaHabitacion;
+    public boolean esValido() {
+        return idReservaHabitacion != null
+                && idHuesped != null
+                && ("TITULAR".equals(rol) || "ACOMPANANTE".equals(rol));
     }
 
-    public void setIdReservaHabitacion(Long idReservaHabitacion) {
-        this.idReservaHabitacion = idReservaHabitacion;
-    }
+    public Long getIdReservaHabitacion() { return idReservaHabitacion; }
+    public void setIdReservaHabitacion(Long idReservaHabitacion) { this.idReservaHabitacion = idReservaHabitacion; }
 
-    public Long getIdHuesped() {
-        return idHuesped;
-    }
+    public Long getIdHuesped() { return idHuesped; }
+    public void setIdHuesped(Long idHuesped) { this.idHuesped = idHuesped; }
 
-    public void setIdHuesped(Long idHuesped) {
-        this.idHuesped = idHuesped;
-    }
-
-    public String getRol() {
-        return rol;
-    }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
+    public String getRol() { return rol; }
+    public void setRol(String rol) { this.rol = rol; }
 }

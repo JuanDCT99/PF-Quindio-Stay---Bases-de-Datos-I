@@ -1,6 +1,8 @@
+
 package model;
 
 public class TipoHabitacion {
+
     private Long idTipoHabitacion;
     private String nombreTipo;
     private String descripcion;
@@ -9,11 +11,19 @@ public class TipoHabitacion {
     public TipoHabitacion() {
     }
 
-    public TipoHabitacion(Long idTipoHabitacion, String nombreTipo, String descripcion, Integer capacidadEstandar) {
+    public TipoHabitacion(Long idTipoHabitacion, String nombreTipo,
+                          String descripcion, Integer capacidadEstandar) {
         this.idTipoHabitacion = idTipoHabitacion;
         this.nombreTipo = nombreTipo;
         this.descripcion = descripcion;
         this.capacidadEstandar = capacidadEstandar;
+    }
+
+    public boolean esValido() {
+        return nombreTipo != null
+                && !nombreTipo.isBlank()
+                && capacidadEstandar != null
+                && capacidadEstandar > 0;
     }
 
     public Long getIdTipoHabitacion() {

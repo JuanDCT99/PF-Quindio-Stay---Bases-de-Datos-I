@@ -1,8 +1,10 @@
+
 package model;
 
 import java.time.LocalDateTime;
 
 public class Servicio {
+
     private Long idServicio;
     private String nombreServicio;
     private String tipoServicio;
@@ -14,7 +16,10 @@ public class Servicio {
     public Servicio() {
     }
 
-    public Servicio(Long idServicio, String nombreServicio, String tipoServicio, LocalDateTime horaApertura, LocalDateTime horaCierre, String usoExclusivo, Long idAlojamiento) {
+    public Servicio(Long idServicio, String nombreServicio, String tipoServicio,
+                    LocalDateTime horaApertura, LocalDateTime horaCierre,
+                    String usoExclusivo, Long idAlojamiento) {
+
         this.idServicio = idServicio;
         this.nombreServicio = nombreServicio;
         this.tipoServicio = tipoServicio;
@@ -24,59 +29,36 @@ public class Servicio {
         this.idAlojamiento = idAlojamiento;
     }
 
-    public Long getIdServicio() {
-        return idServicio;
+    public boolean esValido() {
+        return nombreServicio != null && !nombreServicio.isBlank()
+                && nombreServicio.length() <= 100
+                && tipoServicio != null && !tipoServicio.isBlank()
+                && tipoServicio.length() <= 30
+                && ("S".equals(usoExclusivo) || "N".equals(usoExclusivo))
+                && idAlojamiento != null
+                && ((horaApertura == null && horaCierre == null)
+                || (horaApertura != null && horaCierre != null
+                && !horaCierre.isBefore(horaApertura)));
     }
 
-    public void setIdServicio(Long idServicio) {
-        this.idServicio = idServicio;
-    }
+    public Long getIdServicio() { return idServicio; }
+    public void setIdServicio(Long idServicio) { this.idServicio = idServicio; }
 
-    public String getNombreServicio() {
-        return nombreServicio;
-    }
+    public String getNombreServicio() { return nombreServicio; }
+    public void setNombreServicio(String nombreServicio) { this.nombreServicio = nombreServicio; }
 
-    public void setNombreServicio(String nombreServicio) {
-        this.nombreServicio = nombreServicio;
-    }
+    public String getTipoServicio() { return tipoServicio; }
+    public void setTipoServicio(String tipoServicio) { this.tipoServicio = tipoServicio; }
 
-    public String getTipoServicio() {
-        return tipoServicio;
-    }
+    public LocalDateTime getHoraApertura() { return horaApertura; }
+    public void setHoraApertura(LocalDateTime horaApertura) { this.horaApertura = horaApertura; }
 
-    public void setTipoServicio(String tipoServicio) {
-        this.tipoServicio = tipoServicio;
-    }
+    public LocalDateTime getHoraCierre() { return horaCierre; }
+    public void setHoraCierre(LocalDateTime horaCierre) { this.horaCierre = horaCierre; }
 
-    public LocalDateTime getHoraApertura() {
-        return horaApertura;
-    }
+    public String getUsoExclusivo() { return usoExclusivo; }
+    public void setUsoExclusivo(String usoExclusivo) { this.usoExclusivo = usoExclusivo; }
 
-    public void setHoraApertura(LocalDateTime horaApertura) {
-        this.horaApertura = horaApertura;
-    }
-
-    public LocalDateTime getHoraCierre() {
-        return horaCierre;
-    }
-
-    public void setHoraCierre(LocalDateTime horaCierre) {
-        this.horaCierre = horaCierre;
-    }
-
-    public String getUsoExclusivo() {
-        return usoExclusivo;
-    }
-
-    public void setUsoExclusivo(String usoExclusivo) {
-        this.usoExclusivo = usoExclusivo;
-    }
-
-    public Long getIdAlojamiento() {
-        return idAlojamiento;
-    }
-
-    public void setIdAlojamiento(Long idAlojamiento) {
-        this.idAlojamiento = idAlojamiento;
-    }
+    public Long getIdAlojamiento() { return idAlojamiento; }
+    public void setIdAlojamiento(Long idAlojamiento) { this.idAlojamiento = idAlojamiento; }
 }
