@@ -1,0 +1,121 @@
+.welcome-root {
+    -fx-background-color: #FDFBD4;
+    -fx-font-family: "Segoe UI";
+}
+
+.welcome-shell {
+    -fx-background-color: #FDFBD4;
+}
+
+.brand-panel {
+    -fx-background-color: #FDFBD4;
+    -fx-border-color: transparent #E8DBA8 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.brand-name {
+    -fx-text-fill: #000000;
+    -fx-font-family: "Georgia";
+    -fx-font-size: 38px;
+    -fx-font-weight: bold;
+}
+
+.brand-tagline {
+    -fx-text-fill: #000000;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.brand-divider {
+    -fx-background-color: linear-gradient(to right, #c98b2e, transparent);
+}
+
+.brand-description {
+    -fx-text-fill: #d8e8e3;
+    -fx-font-size: 15px;
+}
+
+.brand-footer-title {
+    -fx-text-fill: #f0c987;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.brand-footer-text {
+    -fx-text-fill: #5c5540;
+    -fx-font-size: 12px;
+}
+
+.image-panel {
+    -fx-background-color: #FDFBD4;
+}
+
+.welcome-content {
+    -fx-background-color: transparent;
+}
+
+.welcome-eyebrow {
+    -fx-text-fill: #f0c987;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(240, 201, 135, 0.12);
+    -fx-background-radius: 20.0;
+    -fx-padding: 6.0 14.0 6.0 14.0;
+}
+
+.welcome-title {
+    -fx-text-fill: #000000;
+    -fx-font-family: "Georgia";
+    -fx-font-size: 42px;
+    -fx-font-weight: bold;
+}
+
+.welcome-description {
+    -fx-text-fill: #000000;
+    -fx-font-size: 16px;
+}
+
+.primary-button {
+    -fx-background-color: #f0c987;
+    -fx-background-radius: 28.0;
+    -fx-text-fill: #173b3b;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12.0 34.0 12.0 34.0;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #ffd9a1;
+}
+
+.primary-button:pressed {
+    -fx-background-color: #d9ae63;
+}
+
+.primary-button:focused {
+    -fx-effect: dropshadow(gaussian, rgba(240, 201, 135, 0.5), 18, 0.2, 0, 0);
+}
+
+.secondary-button {
+    -fx-background-color: #e5ae70;
+    -fx-background-radius: 28.0;
+    -fx-text-fill: #2b2414;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12.0 30.0 12.0 30.0;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #f0c184;
+}
+
+.secondary-button:pressed {
+    -fx-background-color: #d59a58;
+}
+
+.status-label {
+    -fx-text-fill: #8fb8b1;
+    -fx-font-size: 12px;
+}
