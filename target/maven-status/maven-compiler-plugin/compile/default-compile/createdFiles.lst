@@ -20,6 +20,7 @@ model\Personal.class
 model\TipoHabitacion.class
 model\UsoServicio.class
 model\Servicio.class
+ViewController\SesionController.class
 model\Ocupacion.class
 model\Sancion.class
 model\ReporteGenerado.class
