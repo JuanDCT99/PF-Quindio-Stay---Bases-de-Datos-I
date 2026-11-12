@@ -1,0 +1,11 @@
+# Binarios de build
+out/
+target/
+*.class
+*.iml
+
+# Configuración de IntelliJ
+.idea/
+
+# Ficheros temporales
+*.log
