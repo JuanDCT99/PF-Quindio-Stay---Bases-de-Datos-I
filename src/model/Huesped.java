@@ -1,4 +1,3 @@
-
 package model;
 
 import java.time.LocalDate;
@@ -37,9 +36,17 @@ public class Huesped {
                 && !documento.isBlank()
                 && documento.length() <= 25
                 && fechaNacimiento != null
+                && !fechaNacimiento.isAfter(LocalDate.now())
                 && (direccion == null || direccion.length() <= 200)
-                && (correo == null || correo.length() <= 120)
+                && tieneCorreoValido()
                 && (telefono == null || telefono.length() <= 25);
+    }
+
+    public boolean tieneCorreoValido() {
+        return correo == null
+                || correo.isBlank()
+                || (correo.length() <= 120
+                && correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$"));
     }
 
     public Long getIdHuesped() {

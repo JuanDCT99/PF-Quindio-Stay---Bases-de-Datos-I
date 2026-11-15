@@ -1,4 +1,3 @@
-
 package model;
 
 import java.math.BigDecimal;
@@ -28,24 +27,55 @@ public class Pago {
     public boolean esValido() {
         return monto != null
                 && monto.compareTo(BigDecimal.ZERO) > 0
-                && medioPago != null && !medioPago.isBlank()
-                && medioPago.length() <= 25
+                && tieneMedioPagoValido()
                 && fechaPago != null
                 && idReserva != null;
     }
 
-    public Long getIdPago() { return idPago; }
-    public void setIdPago(Long idPago) { this.idPago = idPago; }
+    public boolean tieneMedioPagoValido() {
+        return "EFECTIVO".equalsIgnoreCase(medioPago)
+                || "TRANSFERENCIA".equalsIgnoreCase(medioPago)
+                || "NEQUI".equalsIgnoreCase(medioPago)
+                || "DAVIPLATA".equalsIgnoreCase(medioPago);
+    }
 
-    public BigDecimal getMonto() { return monto; }
-    public void setMonto(BigDecimal monto) { this.monto = monto; }
+    public Long getIdPago() {
+        return idPago;
+    }
 
-    public String getMedioPago() { return medioPago; }
-    public void setMedioPago(String medioPago) { this.medioPago = medioPago; }
+    public void setIdPago(Long idPago) {
+        this.idPago = idPago;
+    }
 
-    public LocalDateTime getFechaPago() { return fechaPago; }
-    public void setFechaPago(LocalDateTime fechaPago) { this.fechaPago = fechaPago; }
+    public BigDecimal getMonto() {
+        return monto;
+    }
 
-    public Long getIdReserva() { return idReserva; }
-    public void setIdReserva(Long idReserva) { this.idReserva = idReserva; }
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
+    }
+
+    public String getMedioPago() {
+        return medioPago;
+    }
+
+    public void setMedioPago(String medioPago) {
+        this.medioPago = medioPago;
+    }
+
+    public LocalDateTime getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(LocalDateTime fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+
+    public Long getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
+    }
 }

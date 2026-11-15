@@ -1,4 +1,3 @@
-
 package model;
 
 import java.time.LocalDateTime;
@@ -33,9 +32,15 @@ public class Alojamiento {
     }
 
     public boolean esValido() {
-        return nombreAlojamiento != null && !nombreAlojamiento.isBlank()
-                && nit != null && !nit.isBlank()
-                && direccion != null && !direccion.isBlank()
+        return nombreAlojamiento != null
+                && !nombreAlojamiento.isBlank()
+                && nombreAlojamiento.length() <= 100
+                && nit != null
+                && !nit.isBlank()
+                && nit.length() <= 20
+                && direccion != null
+                && !direccion.isBlank()
+                && direccion.length() <= 200
                 && ("S".equals(aceptaMascotas) || "N".equals(aceptaMascotas))
                 && horaSalidaLimite != null
                 && plazoConfirmacionHoras != null

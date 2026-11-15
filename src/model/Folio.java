@@ -1,4 +1,3 @@
-
 package model;
 
 import java.time.LocalDateTime;
@@ -31,15 +30,59 @@ public class Folio {
                 && !("CERRADO".equals(estado) && fechaCierre == null);
     }
 
-    public Long getIdReserva() { return idReserva; }
-    public void setIdReserva(Long idReserva) { this.idReserva = idReserva; }
+    public boolean abrir(LocalDateTime fecha) {
+        if (fecha == null || estado != null) {
+            return false;
+        }
 
-    public LocalDateTime getFechaApertura() { return fechaApertura; }
-    public void setFechaApertura(LocalDateTime fechaApertura) { this.fechaApertura = fechaApertura; }
+        fechaApertura = fecha;
+        fechaCierre = null;
+        estado = "ABIERTO";
+        return true;
+    }
 
-    public LocalDateTime getFechaCierre() { return fechaCierre; }
-    public void setFechaCierre(LocalDateTime fechaCierre) { this.fechaCierre = fechaCierre; }
+    public boolean cerrar(LocalDateTime fecha) {
+        if (!"ABIERTO".equals(estado)
+                || fecha == null
+                || fechaApertura == null
+                || fecha.isBefore(fechaApertura)) {
+            return false;
+        }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+        fechaCierre = fecha;
+        estado = "CERRADO";
+        return true;
+    }
+
+    public Long getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
+    }
+
+    public LocalDateTime getFechaApertura() {
+        return fechaApertura;
+    }
+
+    public void setFechaApertura(LocalDateTime fechaApertura) {
+        this.fechaApertura = fechaApertura;
+    }
+
+    public LocalDateTime getFechaCierre() {
+        return fechaCierre;
+    }
+
+    public void setFechaCierre(LocalDateTime fechaCierre) {
+        this.fechaCierre = fechaCierre;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 }

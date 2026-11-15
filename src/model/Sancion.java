@@ -31,33 +31,75 @@ public class Sancion {
     }
 
     public boolean esValido() {
-        return tipoSancion != null && !tipoSancion.isBlank()
+        return tipoSancion != null
+                && !tipoSancion.isBlank()
                 && tipoSancion.length() <= 30
-                && descripcion != null && !descripcion.isBlank()
+                && descripcion != null
+                && !descripcion.isBlank()
                 && descripcion.length() <= 500
                 && fechaSancion != null
-                && valor != null && valor.compareTo(BigDecimal.ZERO) > 0
+                && valor != null
+                && valor.compareTo(BigDecimal.ZERO) > 0
                 && idReserva != null;
     }
 
-    public Long getIdSancion() { return idSancion; }
-    public void setIdSancion(Long idSancion) { this.idSancion = idSancion; }
+    public boolean tieneServicioAsociado() {
+        return idServicio != null;
+    }
 
-    public String getTipoSancion() { return tipoSancion; }
-    public void setTipoSancion(String tipoSancion) { this.tipoSancion = tipoSancion; }
+    public Long getIdSancion() {
+        return idSancion;
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public void setIdSancion(Long idSancion) {
+        this.idSancion = idSancion;
+    }
 
-    public LocalDateTime getFechaSancion() { return fechaSancion; }
-    public void setFechaSancion(LocalDateTime fechaSancion) { this.fechaSancion = fechaSancion; }
+    public String getTipoSancion() {
+        return tipoSancion;
+    }
 
-    public BigDecimal getValor() { return valor; }
-    public void setValor(BigDecimal valor) { this.valor = valor; }
+    public void setTipoSancion(String tipoSancion) {
+        this.tipoSancion = tipoSancion;
+    }
 
-    public Long getIdReserva() { return idReserva; }
-    public void setIdReserva(Long idReserva) { this.idReserva = idReserva; }
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-    public Long getIdServicio() { return idServicio; }
-    public void setIdServicio(Long idServicio) { this.idServicio = idServicio; }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public LocalDateTime getFechaSancion() {
+        return fechaSancion;
+    }
+
+    public void setFechaSancion(LocalDateTime fechaSancion) {
+        this.fechaSancion = fechaSancion;
+    }
+
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public void setValor(BigDecimal valor) {
+        this.valor = valor;
+    }
+
+    public Long getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
+    }
+
+    public Long getIdServicio() {
+        return idServicio;
+    }
+
+    public void setIdServicio(Long idServicio) {
+        this.idServicio = idServicio;
+    }
 }

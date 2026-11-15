@@ -1,7 +1,7 @@
-
 package model;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Servicio {
 
@@ -30,35 +30,88 @@ public class Servicio {
     }
 
     public boolean esValido() {
-        return nombreServicio != null && !nombreServicio.isBlank()
+        return nombreServicio != null
+                && !nombreServicio.isBlank()
                 && nombreServicio.length() <= 100
-                && tipoServicio != null && !tipoServicio.isBlank()
+                && tipoServicio != null
+                && !tipoServicio.isBlank()
                 && tipoServicio.length() <= 30
                 && ("S".equals(usoExclusivo) || "N".equals(usoExclusivo))
                 && idAlojamiento != null
                 && ((horaApertura == null && horaCierre == null)
                 || (horaApertura != null && horaCierre != null
-                && !horaCierre.isBefore(horaApertura)));
+                && horaCierre.isAfter(horaApertura)));
     }
 
-    public Long getIdServicio() { return idServicio; }
-    public void setIdServicio(Long idServicio) { this.idServicio = idServicio; }
+    public boolean estaDisponibleEn(LocalDateTime inicio, LocalDateTime fin) {
+        if (inicio == null || fin == null || !fin.isAfter(inicio)) {
+            return false;
+        }
 
-    public String getNombreServicio() { return nombreServicio; }
-    public void setNombreServicio(String nombreServicio) { this.nombreServicio = nombreServicio; }
+        if (horaApertura == null || horaCierre == null) {
+            return true;
+        }
 
-    public String getTipoServicio() { return tipoServicio; }
-    public void setTipoServicio(String tipoServicio) { this.tipoServicio = tipoServicio; }
+        LocalTime apertura = horaApertura.toLocalTime();
+        LocalTime cierre = horaCierre.toLocalTime();
 
-    public LocalDateTime getHoraApertura() { return horaApertura; }
-    public void setHoraApertura(LocalDateTime horaApertura) { this.horaApertura = horaApertura; }
+        return !inicio.toLocalTime().isBefore(apertura)
+                && !fin.toLocalTime().isAfter(cierre);
+    }
 
-    public LocalDateTime getHoraCierre() { return horaCierre; }
-    public void setHoraCierre(LocalDateTime horaCierre) { this.horaCierre = horaCierre; }
+    public Long getIdServicio() {
+        return idServicio;
+    }
 
-    public String getUsoExclusivo() { return usoExclusivo; }
-    public void setUsoExclusivo(String usoExclusivo) { this.usoExclusivo = usoExclusivo; }
+    public void setIdServicio(Long idServicio) {
+        this.idServicio = idServicio;
+    }
 
-    public Long getIdAlojamiento() { return idAlojamiento; }
-    public void setIdAlojamiento(Long idAlojamiento) { this.idAlojamiento = idAlojamiento; }
+    public String getNombreServicio() {
+        return nombreServicio;
+    }
+
+    public void setNombreServicio(String nombreServicio) {
+        this.nombreServicio = nombreServicio;
+    }
+
+    public String getTipoServicio() {
+        return tipoServicio;
+    }
+
+    public void setTipoServicio(String tipoServicio) {
+        this.tipoServicio = tipoServicio;
+    }
+
+    public LocalDateTime getHoraApertura() {
+        return horaApertura;
+    }
+
+    public void setHoraApertura(LocalDateTime horaApertura) {
+        this.horaApertura = horaApertura;
+    }
+
+    public LocalDateTime getHoraCierre() {
+        return horaCierre;
+    }
+
+    public void setHoraCierre(LocalDateTime horaCierre) {
+        this.horaCierre = horaCierre;
+    }
+
+    public String getUsoExclusivo() {
+        return usoExclusivo;
+    }
+
+    public void setUsoExclusivo(String usoExclusivo) {
+        this.usoExclusivo = usoExclusivo;
+    }
+
+    public Long getIdAlojamiento() {
+        return idAlojamiento;
+    }
+
+    public void setIdAlojamiento(Long idAlojamiento) {
+        this.idAlojamiento = idAlojamiento;
+    }
 }

@@ -30,31 +30,67 @@ public class UsoServicio {
     }
 
     public boolean esValido() {
-        return fechaHoraInicio != null && fechaHoraFin != null
-                && !fechaHoraFin.isBefore(fechaHoraInicio)
+        return fechaHoraInicio != null
+                && fechaHoraFin != null
+                && fechaHoraFin.isAfter(fechaHoraInicio)
                 && (solicitud == null || solicitud.length() <= 500)
                 && idReservaHabitacion != null
                 && idServicio != null;
     }
 
-    public Long getIdUsoServicio() { return idUsoServicio; }
-    public void setIdUsoServicio(Long idUsoServicio) { this.idUsoServicio = idUsoServicio; }
+    public Long getIdUsoServicio() {
+        return idUsoServicio;
+    }
 
-    public LocalDateTime getFechaHoraInicio() { return fechaHoraInicio; }
-    public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) { this.fechaHoraInicio = fechaHoraInicio; }
+    public void setIdUsoServicio(Long idUsoServicio) {
+        this.idUsoServicio = idUsoServicio;
+    }
 
-    public LocalDateTime getFechaHoraFin() { return fechaHoraFin; }
-    public void setFechaHoraFin(LocalDateTime fechaHoraFin) { this.fechaHoraFin = fechaHoraFin; }
+    public LocalDateTime getFechaHoraInicio() {
+        return fechaHoraInicio;
+    }
 
-    public String getSolicitud() { return solicitud; }
-    public void setSolicitud(String solicitud) { this.solicitud = solicitud; }
+    public void setFechaHoraInicio(LocalDateTime fechaHoraInicio) {
+        this.fechaHoraInicio = fechaHoraInicio;
+    }
 
-    public Long getIdReservaHabitacion() { return idReservaHabitacion; }
-    public void setIdReservaHabitacion(Long idReservaHabitacion) { this.idReservaHabitacion = idReservaHabitacion; }
+    public LocalDateTime getFechaHoraFin() {
+        return fechaHoraFin;
+    }
 
-    public Long getIdServicio() { return idServicio; }
-    public void setIdServicio(Long idServicio) { this.idServicio = idServicio; }
+    public void setFechaHoraFin(LocalDateTime fechaHoraFin) {
+        this.fechaHoraFin = fechaHoraFin;
+    }
 
-    public Long getIdPersonal() { return idPersonal; }
-    public void setIdPersonal(Long idPersonal) { this.idPersonal = idPersonal; }
+    public String getSolicitud() {
+        return solicitud;
+    }
+
+    public void setSolicitud(String solicitud) {
+        this.solicitud = solicitud;
+    }
+
+    public Long getIdReservaHabitacion() {
+        return idReservaHabitacion;
+    }
+
+    public void setIdReservaHabitacion(Long idReservaHabitacion) {
+        this.idReservaHabitacion = idReservaHabitacion;
+    }
+
+    public Long getIdServicio() {
+        return idServicio;
+    }
+
+    public void setIdServicio(Long idServicio) {
+        this.idServicio = idServicio;
+    }
+
+    public Long getIdPersonal() {
+        return idPersonal;
+    }
+
+    public void setIdPersonal(Long idPersonal) {
+        this.idPersonal = idPersonal;
+    }
 }
