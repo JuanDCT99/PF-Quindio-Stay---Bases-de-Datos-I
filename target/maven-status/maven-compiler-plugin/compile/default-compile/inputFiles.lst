@@ -28,4 +28,15 @@ C:\Users\ASUS\Documents\Bases de datosI\src\model\TipoHabitacion.java
 C:\Users\ASUS\Documents\Bases de datosI\src\model\UsoServicio.java
 C:\Users\ASUS\Documents\Bases de datosI\src\model\UsuarioSistema.java
 C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\BienvenidaController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\DashboardController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\HabitacionController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\PagoController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\PerfilController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\RegistroAdminController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\RegistroHuespedController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\RegistroPersonalController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\ReportesController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\SanciónController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\SeleccionRolController.java
+C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\ServiciosController.java
 C:\Users\ASUS\Documents\Bases de datosI\src\ViewController\SesionController.java

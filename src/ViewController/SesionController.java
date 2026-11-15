@@ -1,11 +1,17 @@
 package ViewController;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class SesionController {
 
@@ -36,14 +42,31 @@ public class SesionController {
             return;
         }
 
-        mostrarAlerta(event, Alert.AlertType.INFORMATION, "Inicio de sesión",
-                "La autenticación se conectará con la capa de servicios y la base de datos.");
+        cambiarVista(event, "/Resources/Dashboard.fxml", "Reservas");
     }
 
     @FXML
     private void crearCuenta(ActionEvent event) {
-        mostrarAlerta(event, Alert.AlertType.INFORMATION, "Crear cuenta",
-                "El registro de nuevos huéspedes se implementará en una vista posterior.");
+        cambiarVista(event, "/Resources/SeleccionRol.fxml", "Selección de Rol");
+    }
+
+    private void cambiarVista(ActionEvent event, String ruta, String titulo) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(ruta));
+            Parent root = loader.load();
+
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("QuindíoStay | " + titulo);
+            stage.setMinWidth(1100);
+            stage.setMinHeight(580);
+            stage.sizeToScene();
+            stage.centerOnScreen();
+            stage.show();
+        } catch (IOException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR,
+                    "No se pudo abrir la pantalla de " + titulo.toLowerCase(), e.getMessage());
+        }
     }
 
     private boolean esVacio(TextField campo) {
