@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane prefHeight="700.0" prefWidth="1100.0"
+           styleClass="welcome-root"
+           stylesheets="@styles/bienvenida.css"
+           xmlns="http://javafx.com/javafx/21"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="ViewController.BienvenidaController">
+
+    <children>
+        <HBox styleClass="welcome-shell">
+            <children>
+                <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="0.0" prefWidth="0.0"
+                      spacing="24.0" styleClass="brand-panel">
+                    <padding>
+                        <Insets bottom="48.0" left="40.0" right="40.0" top="52.0"/>
+                    </padding>
+                    <children>
+                        <VBox spacing="8.0">
+                            <children>
+                                <Label styleClass="brand-name" text="Bienvenido a"/>
+                                <Label styleClass="brand-tagline" text="Sistema de Reservas Hoteleras"/>
+                            </children>
+                        </VBox>
+
+                        <Region maxWidth="64.0" minHeight="2.0" prefHeight="2.0" prefWidth="64.0"
+                                styleClass="brand-divider"/>
+
+                        <Region VBox.vgrow="ALWAYS"/>
+
+                        <HBox alignment="CENTER">
+                            <children>
+                                <ImageView fitHeight="380.0" fitWidth="380.0" pickOnBounds="true"
+                                           preserveRatio="true" smooth="true">
+                                    <image>
+                                        <Image url="@Logo.png"/>
+                                    </image>
+                                </ImageView>
+                            </children>
+                        </HBox>
+
+                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="welcome-actions">
+                            <children>
+                                <Button fx:id="btnEntrar" defaultButton="true" mnemonicParsing="false"
+                                        onAction="#entrar" styleClass="primary-button" text="Entrar"/>
+                                <Button fx:id="btnSalir" cancelButton="true" mnemonicParsing="false"
+                                        onAction="#salir" styleClass="secondary-button" text="Salir"/>
+                            </children>
+                        </HBox>
+
+                        <VBox spacing="8.0" styleClass="brand-footer">
+                            <children>
+                                <Label styleClass="brand-footer-text" text="Administrado por:"/>
+                                <Label styleClass="brand-footer-text"
+                                       text="Juan David Cardozo · Camilo Ruiz · Erwin Garzón"/>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+
+                <StackPane fx:id="panelImagen" HBox.hgrow="ALWAYS" maxWidth="Infinity" minWidth="0.0"
+                           prefWidth="0.0" styleClass="image-panel">
+                    <children>
+                        <ImageView fx:id="imagenBienvenida" pickOnBounds="true" preserveRatio="true"
+                                   smooth="true">
+                            <image>
+                                <Image url="@imagenBienvenida.png"/>
+                            </image>
+                        </ImageView>
+                    </children>
+                </StackPane>
+            </children>
+        </HBox>
+    </children>
+</StackPane>

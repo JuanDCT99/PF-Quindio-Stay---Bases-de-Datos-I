@@ -1,15 +1,26 @@
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Main {
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("/Resources/vista_bienvenida.fxml"));
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root, 1100, 700);
+        primaryStage.setTitle("QuindíoStay | Sistema de Reservas Hoteleras");
+        primaryStage.setScene(scene);
+        primaryStage.setMinWidth(960);
+        primaryStage.setMinHeight(620);
+        primaryStage.centerOnScreen();
+        primaryStage.show();
+    }
 
     public static void main(String[] args) {
-
-        System.out.println("==================================");
-        System.out.println("       QUINDIOSTAY");
-        System.out.println(" Sistema de Reservas Hoteleras");
-        System.out.println("==================================");
-
-        System.out.println("Java 21 configurado correctamente.");
-        System.out.println("Proyecto preparado para continuar.");
-
+        launch(args);
     }
 }
