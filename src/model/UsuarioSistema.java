@@ -1,4 +1,3 @@
-
 package model;
 
 public class UsuarioSistema {
@@ -26,31 +25,79 @@ public class UsuarioSistema {
     }
 
     public boolean esValido() {
-        return nombreUsuario != null && !nombreUsuario.isBlank()
+        return nombreUsuario != null
+                && !nombreUsuario.isBlank()
                 && nombreUsuario.length() <= 50
-                && contrasenaHash != null && !contrasenaHash.isBlank()
+                && contrasenaHash != null
+                && !contrasenaHash.isBlank()
                 && contrasenaHash.length() <= 255
-                && ("ACTIVO".equals(estado)
-                || "INACTIVO".equals(estado)
-                || "BLOQUEADO".equals(estado))
+                && tieneEstadoValido()
                 && idRol != null;
     }
 
-    public Long getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
+    public boolean tieneEstadoValido() {
+        return "ACTIVO".equals(estado)
+                || "INACTIVO".equals(estado)
+                || "BLOQUEADO".equals(estado);
+    }
 
-    public String getNombreUsuario() { return nombreUsuario; }
-    public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
+    public boolean estaActivo() {
+        return "ACTIVO".equals(estado);
+    }
 
-    public String getContrasenaHash() { return contrasenaHash; }
-    public void setContrasenaHash(String contrasenaHash) { this.contrasenaHash = contrasenaHash; }
+    public void desactivar() {
+        estado = "INACTIVO";
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public void activar() {
+        estado = "ACTIVO";
+    }
 
-    public Long getIdRol() { return idRol; }
-    public void setIdRol(Long idRol) { this.idRol = idRol; }
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
 
-    public Long getIdPersonal() { return idPersonal; }
-    public void setIdPersonal(Long idPersonal) { this.idPersonal = idPersonal; }
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public String getContrasenaHash() {
+        return contrasenaHash;
+    }
+
+    public void setContrasenaHash(String contrasenaHash) {
+        this.contrasenaHash = contrasenaHash;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Long getIdRol() {
+        return idRol;
+    }
+
+    public void setIdRol(Long idRol) {
+        this.idRol = idRol;
+    }
+
+    public Long getIdPersonal() {
+        return idPersonal;
+    }
+
+    public void setIdPersonal(Long idPersonal) {
+        this.idPersonal = idPersonal;
+    }
 }

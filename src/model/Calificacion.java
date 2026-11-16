@@ -1,4 +1,3 @@
-
 package model;
 
 import java.time.LocalDateTime;
@@ -29,28 +28,59 @@ public class Calificacion {
 
     public boolean esValido() {
         return puntuacion != null
-                && puntuacion >= 0 && puntuacion <= 99
+                && puntuacion >= 1
+                && puntuacion <= 5
                 && (comentario == null || comentario.length() <= 1000)
                 && fechaCalificacion != null
                 && idHuesped != null
                 && idReserva != null;
     }
 
-    public Long getIdCalificacion() { return idCalificacion; }
-    public void setIdCalificacion(Long idCalificacion) { this.idCalificacion = idCalificacion; }
+    public Long getIdCalificacion() {
+        return idCalificacion;
+    }
 
-    public Integer getPuntuacion() { return puntuacion; }
-    public void setPuntuacion(Integer puntuacion) { this.puntuacion = puntuacion; }
+    public void setIdCalificacion(Long idCalificacion) {
+        this.idCalificacion = idCalificacion;
+    }
 
-    public String getComentario() { return comentario; }
-    public void setComentario(String comentario) { this.comentario = comentario; }
+    public Integer getPuntuacion() {
+        return puntuacion;
+    }
 
-    public LocalDateTime getFechaCalificacion() { return fechaCalificacion; }
-    public void setFechaCalificacion(LocalDateTime fechaCalificacion) { this.fechaCalificacion = fechaCalificacion; }
+    public void setPuntuacion(Integer puntuacion) {
+        this.puntuacion = puntuacion;
+    }
 
-    public Long getIdHuesped() { return idHuesped; }
-    public void setIdHuesped(Long idHuesped) { this.idHuesped = idHuesped; }
+    public String getComentario() {
+        return comentario;
+    }
 
-    public Long getIdReserva() { return idReserva; }
-    public void setIdReserva(Long idReserva) { this.idReserva = idReserva; }
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public LocalDateTime getFechaCalificacion() {
+        return fechaCalificacion;
+    }
+
+    public void setFechaCalificacion(LocalDateTime fechaCalificacion) {
+        this.fechaCalificacion = fechaCalificacion;
+    }
+
+    public Long getIdHuesped() {
+        return idHuesped;
+    }
+
+    public void setIdHuesped(Long idHuesped) {
+        this.idHuesped = idHuesped;
+    }
+
+    public Long getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
+    }
 }

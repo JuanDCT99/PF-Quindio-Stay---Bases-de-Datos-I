@@ -1,4 +1,3 @@
-
 package model;
 
 import java.time.LocalDate;
@@ -35,7 +34,7 @@ public class Temporada {
                 && anio <= 9999
                 && fechaInicio != null
                 && fechaFin != null
-                && !fechaFin.isBefore(fechaInicio);
+                && fechaFin.isAfter(fechaInicio);
     }
 
     public Long getIdTemporada() {

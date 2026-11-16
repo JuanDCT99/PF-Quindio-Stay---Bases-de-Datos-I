@@ -1,4 +1,3 @@
-
 package model;
 
 public class Habitacion {
@@ -33,10 +32,25 @@ public class Habitacion {
                 && !numeroHabitacion.isBlank()
                 && capacidadMaxima != null
                 && capacidadMaxima > 0
-                && estadoOperativo != null
-                && !estadoOperativo.isBlank()
+                && tieneEstadoValido()
                 && idTipoHabitacion != null
                 && idAlojamiento != null;
+    }
+
+    public boolean tieneEstadoValido() {
+        return "DISPONIBLE".equals(estadoOperativo)
+                || "MANTENIMIENTO".equals(estadoOperativo)
+                || "FUERA_DE_SERVICIO".equals(estadoOperativo);
+    }
+
+    public boolean estaDisponible() {
+        return "DISPONIBLE".equals(estadoOperativo);
+    }
+
+    public boolean tieneCapacidadPara(int cantidadPersonas) {
+        return cantidadPersonas > 0
+                && capacidadMaxima != null
+                && cantidadPersonas <= capacidadMaxima;
     }
 
     public Long getIdHabitacion() {

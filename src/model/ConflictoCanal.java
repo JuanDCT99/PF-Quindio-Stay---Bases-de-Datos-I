@@ -1,4 +1,3 @@
-
 package model;
 
 import java.time.LocalDate;
@@ -43,44 +42,98 @@ public class ConflictoCanal {
         return fechaRegistro != null
                 && fechaEntradaSolicitada != null
                 && fechaSalidaSolicitada != null
-                && !fechaSalidaSolicitada.isBefore(fechaEntradaSolicitada)
-                && ("PENDIENTE".equals(estadoRevision)
-                || "EN_REVISION".equals(estadoRevision)
-                || "RESUELTO".equals(estadoRevision)
-                || "DESCARTADO".equals(estadoRevision))
+                && fechaSalidaSolicitada.isAfter(fechaEntradaSolicitada)
+                && tieneEstadoValido()
                 && (observacion == null || observacion.length() <= 1000)
                 && idIntermediario != null
                 && idHabitacion != null
                 && idReserva != null;
     }
 
-    public Long getIdConflicto() { return idConflicto; }
-    public void setIdConflicto(Long idConflicto) { this.idConflicto = idConflicto; }
+    public boolean tieneEstadoValido() {
+        return "PENDIENTE".equals(estadoRevision)
+                || "EN_REVISION".equals(estadoRevision)
+                || "RESUELTO".equals(estadoRevision)
+                || "DESCARTADO".equals(estadoRevision);
+    }
 
-    public LocalDateTime getFechaRegistro() { return fechaRegistro; }
-    public void setFechaRegistro(LocalDateTime fechaRegistro) { this.fechaRegistro = fechaRegistro; }
+    public Long getIdConflicto() {
+        return idConflicto;
+    }
 
-    public LocalDate getFechaEntradaSolicitada() { return fechaEntradaSolicitada; }
-    public void setFechaEntradaSolicitada(LocalDate fechaEntradaSolicitada) { this.fechaEntradaSolicitada = fechaEntradaSolicitada; }
+    public void setIdConflicto(Long idConflicto) {
+        this.idConflicto = idConflicto;
+    }
 
-    public LocalDate getFechaSalidaSolicitada() { return fechaSalidaSolicitada; }
-    public void setFechaSalidaSolicitada(LocalDate fechaSalidaSolicitada) { this.fechaSalidaSolicitada = fechaSalidaSolicitada; }
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
 
-    public String getEstadoRevision() { return estadoRevision; }
-    public void setEstadoRevision(String estadoRevision) { this.estadoRevision = estadoRevision; }
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
 
-    public String getObservacion() { return observacion; }
-    public void setObservacion(String observacion) { this.observacion = observacion; }
+    public LocalDate getFechaEntradaSolicitada() {
+        return fechaEntradaSolicitada;
+    }
 
-    public Long getIdIntermediario() { return idIntermediario; }
-    public void setIdIntermediario(Long idIntermediario) { this.idIntermediario = idIntermediario; }
+    public void setFechaEntradaSolicitada(LocalDate fechaEntradaSolicitada) {
+        this.fechaEntradaSolicitada = fechaEntradaSolicitada;
+    }
 
-    public Long getIdHabitacion() { return idHabitacion; }
-    public void setIdHabitacion(Long idHabitacion) { this.idHabitacion = idHabitacion; }
+    public LocalDate getFechaSalidaSolicitada() {
+        return fechaSalidaSolicitada;
+    }
 
-    public Long getIdReserva() { return idReserva; }
-    public void setIdReserva(Long idReserva) { this.idReserva = idReserva; }
+    public void setFechaSalidaSolicitada(LocalDate fechaSalidaSolicitada) {
+        this.fechaSalidaSolicitada = fechaSalidaSolicitada;
+    }
 
-    public Long getIdUsuario() { return idUsuario; }
-    public void setIdUsuario(Long idUsuario) { this.idUsuario = idUsuario; }
+    public String getEstadoRevision() {
+        return estadoRevision;
+    }
+
+    public void setEstadoRevision(String estadoRevision) {
+        this.estadoRevision = estadoRevision;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public Long getIdIntermediario() {
+        return idIntermediario;
+    }
+
+    public void setIdIntermediario(Long idIntermediario) {
+        this.idIntermediario = idIntermediario;
+    }
+
+    public Long getIdHabitacion() {
+        return idHabitacion;
+    }
+
+    public void setIdHabitacion(Long idHabitacion) {
+        this.idHabitacion = idHabitacion;
+    }
+
+    public Long getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(Long idReserva) {
+        this.idReserva = idReserva;
+    }
+
+    public Long getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
+    }
 }
