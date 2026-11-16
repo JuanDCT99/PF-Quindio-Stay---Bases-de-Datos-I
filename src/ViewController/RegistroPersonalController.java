@@ -13,7 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.sql.SQLException;
+import dao.PersonalDAO;
+import dao.RolDAO;
+import dao.UsuarioDAO;
 import model.Personal;
+import model.Rol;
+import model.UsuarioSistema;
 
 public class RegistroPersonalController {
 
@@ -103,11 +109,35 @@ public class RegistroPersonalController {
             return;
         }
 
-        mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
-                "El miembro del personal " + personal.getNombre() + " fue registrado con el horario de "
-                + HORARIO_PREDETERMINADO + ". El salario y el alojamiento asignado se configurarán "
-                + "desde el módulo administrativo. La cuenta de usuario se conectará con la capa de servicios.");
-        volverAlInicioSesion(event);
+        try {
+            PersonalDAO personalDAO = new PersonalDAO();
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            RolDAO rolDAO = new RolDAO();
+
+            Long idPersonalGenerado = personalDAO.registrarPersonal(personal);
+
+            // Asignar rol Recepcionista por defecto para personal del sistema
+            Rol rolRecep = rolDAO.buscarPorNombre("RECEPCIONISTA");
+            Long idRol = (rolRecep != null && rolRecep.getIdRol() != null) ? rolRecep.getIdRol() : 2L;
+
+            UsuarioSistema nuevoUsuario = new UsuarioSistema(
+                    null,
+                    fldUser.getText().trim(),
+                    null,
+                    "ACTIVO",
+                    idRol,
+                    idPersonalGenerado
+            );
+            usuarioDAO.registrarUsuario(nuevoUsuario, fldContrasena.getText().trim());
+
+            mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
+                    "El colaborador " + personal.getNombre() + " fue registrado exitosamente con usuario: "
+                    + fldUser.getText().trim() + ".\nYa puede iniciar sesión.");
+            volverAlInicioSesion(event);
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de registro",
+                    "No se pudo guardar el personal en Oracle XE: " + e.getMessage());
+        }
     }
 
     private void volverASeleccionRol(ActionEvent event) {

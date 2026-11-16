@@ -1,7 +1,10 @@
 package ViewController;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import dao.RolDAO;
+import dao.UsuarioDAO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +15,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import model.Rol;
+import model.UsuarioSistema;
+import utils.ConexionBD;
+import utils.SesionUsuario;
 
 public class SesionController {
 
@@ -26,6 +33,9 @@ public class SesionController {
 
     @FXML
     private Button btnCrearCuenta;
+
+    private final UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private final RolDAO rolDAO = new RolDAO();
 
     @FXML
     private void initialize() {
@@ -42,7 +52,39 @@ public class SesionController {
             return;
         }
 
-        cambiarVista(event, "/Resources/Dashboard.fxml", "Reservas");
+        String username = txtUsuario.getText().trim();
+        String password = txtContrasena.getText().trim();
+
+        try {
+            UsuarioSistema usuario = usuarioDAO.autenticar(username, password);
+            if (usuario == null) {
+                mostrarAlerta(event, Alert.AlertType.ERROR, "Acceso denegado",
+                        "Usuario o contraseña incorrectos, o la cuenta se encuentra inactiva.\n\n"
+                        + "Usuario de prueba: admin_demo\n"
+                        + "Contraseña: Admin123");
+                return;
+            }
+
+            Rol rol = rolDAO.buscarPorId(usuario.getIdRol());
+            String nombrePersona = usuarioDAO.obtenerNombrePersona(usuario);
+            SesionUsuario.iniciarSesion(usuario, rol, nombrePersona);
+
+            // Redirigir según el rol
+            String vista = "/Resources/Dashboard.fxml";
+            String titulo = "Reservas (" + SesionUsuario.getNombreRol() + ")";
+            if (SesionUsuario.esHuesped()) {
+                vista = "/Resources/Perfil.fxml";
+                titulo = "Mi Perfil de Huésped";
+            }
+
+            cambiarVista(event, vista, titulo);
+
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de Conexión a Base de Datos",
+                    "No se pudo conectar a Oracle XE (" + ConexionBD.getUrl() + ").\n"
+                    + "Verifique que el servicio de base de datos esté activo.\n\n"
+                    + "Detalle: " + e.getMessage());
+        }
     }
 
     @FXML

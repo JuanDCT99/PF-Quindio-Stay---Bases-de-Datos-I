@@ -13,7 +13,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.sql.SQLException;
+import dao.RolDAO;
+import dao.UsuarioDAO;
 import model.Rol;
+import model.UsuarioSistema;
 
 public class RegistroAdminController {
 
@@ -88,18 +92,30 @@ public class RegistroAdminController {
             }
         }
 
-        Rol rolAdministrador = new Rol(null, "Administrador", "Acceso completo al sistema");
-        if (!rolAdministrador.esValido()) {
-            mostrarAlerta(event, Alert.AlertType.WARNING, "Rol no válido",
-                    "No fue posible validar el rol de administrador.");
-            return;
-        }
+        try {
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            RolDAO rolDAO = new RolDAO();
+            Rol rolAdmin = rolDAO.buscarPorNombre("ADMINISTRADOR");
+            Long idRol = (rolAdmin != null && rolAdmin.getIdRol() != null) ? rolAdmin.getIdRol() : 1L;
 
-        mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
-                "El administrador " + fldNombre.getText().trim() + " fue registrado con el rol "
-                + rolAdministrador.getNombreRol() + ". La cuenta de usuario se conectará con la capa "
-                + "de servicios y la base de datos.");
-        volverAlInicioSesion(event);
+            UsuarioSistema nuevoUsuario = new UsuarioSistema(
+                    id,
+                    fldUser.getText().trim(),
+                    null,
+                    "ACTIVO",
+                    idRol,
+                    null
+            );
+            usuarioDAO.registrarUsuario(nuevoUsuario, fldContrasena.getText().trim());
+
+            mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
+                    "El administrador " + fldNombre.getText().trim() + " fue registrado exitosamente con usuario: "
+                    + fldUser.getText().trim() + ".\nYa puede iniciar sesión.");
+            volverAlInicioSesion(event);
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de registro",
+                    "No se pudo guardar el administrador en Oracle XE: " + e.getMessage());
+        }
     }
 
     private void volverASeleccionRol(ActionEvent event) {

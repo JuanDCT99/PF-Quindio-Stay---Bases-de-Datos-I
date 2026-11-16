@@ -16,7 +16,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import java.sql.SQLException;
+import dao.HuespedDAO;
+import dao.RolDAO;
+import dao.UsuarioDAO;
 import model.Huesped;
+import model.Rol;
+import model.UsuarioSistema;
 
 public class RegistroHuespedController {
 
@@ -127,10 +133,34 @@ public class RegistroHuespedController {
             return;
         }
 
-        mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
-                "El huésped " + huesped.getNombre() + " fue registrado correctamente. "
-                + "La creación de la cuenta de usuario se conectará con la capa de servicios y la base de datos.");
-        volverAlInicioSesion(event);
+        try {
+            HuespedDAO huespedDAO = new HuespedDAO();
+            UsuarioDAO usuarioDAO = new UsuarioDAO();
+            RolDAO rolDAO = new RolDAO();
+
+            Long idHuespedGenerado = huespedDAO.registrarHuesped(huesped);
+
+            Rol rolHuesped = rolDAO.buscarPorNombre("HUESPED");
+            Long idRol = (rolHuesped != null && rolHuesped.getIdRol() != null) ? rolHuesped.getIdRol() : 3L;
+
+            UsuarioSistema nuevoUsuario = new UsuarioSistema(
+                    null,
+                    fldUser.getText().trim(),
+                    null,
+                    "ACTIVO",
+                    idRol,
+                    null
+            );
+            usuarioDAO.registrarUsuario(nuevoUsuario, fldContrasena.getText().trim());
+
+            mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
+                    "El huésped " + huesped.getNombre() + " fue registrado exitosamente con usuario: "
+                    + fldUser.getText().trim() + ".\nYa puede iniciar sesión.");
+            volverAlInicioSesion(event);
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de registro",
+                    "No se pudo guardar el huésped en Oracle XE: " + e.getMessage());
+        }
     }
 
     private LocalDate parsearFecha(String valor) {
