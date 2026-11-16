@@ -8,6 +8,7 @@ public class Alojamiento {
     private String nombreAlojamiento;
     private String nit;
     private String direccion;
+    private String telefono;
     private String aceptaMascotas;
     private LocalDateTime horaSalidaLimite;
     private Integer plazoConfirmacionHoras;
@@ -78,6 +79,14 @@ public class Alojamiento {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
     }
 
     public String getAceptaMascotas() {
