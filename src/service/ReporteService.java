@@ -41,6 +41,73 @@ public class ReporteService {
         return lista;
     }
 
+    public Reporte buscarPorId(Long idReporte) throws SQLException {
+        if (idReporte == null) {
+            return null;
+        }
+        String sql = "SELECT id_reporte, nombre_reporte, nivel, pregunta_negocio FROM Reporte WHERE id_reporte = ?";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, idReporte);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearReporte(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    public Long crearReporte(Reporte reporte) throws SQLException {
+        if (reporte == null) {
+            throw new IllegalArgumentException("El reporte no puede ser nulo.");
+        }
+        try (Connection conn = ConexionBD.getConexion()) {
+            if (reporte.getIdReporte() == null) {
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "SELECT NVL(MAX(id_reporte), 0) + 1 AS siguiente_id FROM Reporte");
+                     ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        reporte.setIdReporte(rs.getLong("siguiente_id"));
+                    }
+                }
+            }
+            String sql = "INSERT INTO Reporte (id_reporte, nombre_reporte, nivel, pregunta_negocio) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setLong(1, reporte.getIdReporte());
+                ps.setString(2, reporte.getNombreReporte());
+                ps.setString(3, reporte.getNivel());
+                ps.setString(4, reporte.getPreguntaNegocio());
+                ps.executeUpdate();
+            }
+            return reporte.getIdReporte();
+        }
+    }
+
+    public boolean actualizarReporte(Reporte reporte) throws SQLException {
+        if (reporte == null || reporte.getIdReporte() == null) {
+            throw new IllegalArgumentException("Datos del reporte incompletos.");
+        }
+        String sql = "UPDATE Reporte SET nombre_reporte = ?, nivel = ?, pregunta_negocio = ? WHERE id_reporte = ?";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, reporte.getNombreReporte());
+            ps.setString(2, reporte.getNivel());
+            ps.setString(3, reporte.getPreguntaNegocio());
+            ps.setLong(4, reporte.getIdReporte());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    private Reporte mapearReporte(ResultSet rs) throws SQLException {
+        Reporte reporte = new Reporte();
+        reporte.setIdReporte(rs.getLong("id_reporte"));
+        reporte.setNombreReporte(rs.getString("nombre_reporte"));
+        reporte.setNivel(rs.getString("nivel"));
+        reporte.setPreguntaNegocio(rs.getString("pregunta_negocio"));
+        return reporte;
+    }
+
     /** Ejecuta un reporte y devuelve los resultados.
      * Cada fila se convierte en un Map<String,Object> usando
      * el nombre de la columna como clave.

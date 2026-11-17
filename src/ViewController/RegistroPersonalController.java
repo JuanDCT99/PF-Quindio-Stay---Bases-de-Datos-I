@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.sql.SQLException;
 import dao.PersonalDAO;
+import dao.AlojamientoDAO;
 import dao.RolDAO;
 import dao.UsuarioDAO;
 import model.Personal;
@@ -114,11 +115,23 @@ public class RegistroPersonalController {
             UsuarioDAO usuarioDAO = new UsuarioDAO();
             RolDAO rolDAO = new RolDAO();
 
-            Long idPersonalGenerado = personalDAO.registrarPersonal(personal);
-
             // Asignar rol Recepcionista por defecto para personal del sistema
             Rol rolRecep = rolDAO.buscarPorNombre("RECEPCIONISTA");
-            Long idRol = (rolRecep != null && rolRecep.getIdRol() != null) ? rolRecep.getIdRol() : 2L;
+            if (rolRecep == null || rolRecep.getIdRol() == null) {
+                mostrarAlerta(event, Alert.AlertType.ERROR, "Catálogo incompleto",
+                        "No existe el rol RECEPCIONISTA. Ejecute Database/DML/01_seed_data.sql "
+                        + "(el script termina con COMMIT) y vuelva a intentar.");
+                return;
+            }
+            if (new AlojamientoDAO().buscarPorId(1L) == null) {
+                mostrarAlerta(event, Alert.AlertType.ERROR, "Catálogo incompleto",
+                        "No existe el alojamiento con ID 1, requerido por el personal. "
+                        + "Ejecute Database/DML/01_seed_data.sql y vuelva a intentar.");
+                return;
+            }
+            Long idRol = rolRecep.getIdRol();
+
+            Long idPersonalGenerado = personalDAO.registrarPersonal(personal);
 
             UsuarioSistema nuevoUsuario = new UsuarioSistema(
                     null,

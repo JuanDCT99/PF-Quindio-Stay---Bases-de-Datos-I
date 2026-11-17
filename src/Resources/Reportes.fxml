@@ -32,7 +32,7 @@
                         <Font name="System Bold" size="22.0" />
                     </font>
                 </Text>
-                <Button fx:id="btnHabitacion" layoutX="24.0" layoutY="66.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Habitación" onAction="#irAHabitacion">
+                <Button fx:id="btnHabitacion" layoutX="24.0" layoutY="66.0" mnemonicParsing="false" onAction="#irAHabitacion" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Habitación">
                     <effect>
                         <Lighting diffuseConstant="1.51" specularConstant="1.14" specularExponent="23.04">
                             <bumpInput>
@@ -44,7 +44,7 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button fx:id="btnServicios" layoutX="23.0" layoutY="148.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Servicios" onAction="#irAServicios">
+                <Button fx:id="btnServicios" layoutX="23.0" layoutY="148.0" mnemonicParsing="false" onAction="#irAServicios" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Servicios">
                     <effect>
                         <Lighting diffuseConstant="1.56" specularConstant="0.4">
                             <bumpInput>
@@ -56,7 +56,7 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button fx:id="btnPago" layoutX="23.0" layoutY="221.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Pago" onAction="#irAPago">
+                <Button fx:id="btnPago" layoutX="23.0" layoutY="221.0" mnemonicParsing="false" onAction="#irAPago" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Pago">
                     <effect>
                         <Lighting diffuseConstant="1.53" specularConstant="0.76">
                             <bumpInput>
@@ -68,7 +68,7 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button fx:id="btnSancion" layoutX="23.0" layoutY="296.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Sanción" onAction="#irASancion">
+                <Button fx:id="btnSancion" layoutX="23.0" layoutY="296.0" mnemonicParsing="false" onAction="#irASancion" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Sanción">
                     <effect>
                         <Lighting diffuseConstant="1.58" specularConstant="0.43">
                             <bumpInput>
@@ -80,7 +80,7 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button fx:id="btnReportes" layoutX="23.0" layoutY="373.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Reportes" onAction="#irAReportes">
+                <Button fx:id="btnReportes" layoutX="23.0" layoutY="373.0" mnemonicParsing="false" onAction="#irAReportes" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Reportes">
                     <effect>
                         <Lighting diffuseConstant="1.53" specularConstant="0.48">
                             <bumpInput>
@@ -92,7 +92,7 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button fx:id="btnPerfil" layoutX="24.0" layoutY="442.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Perfil" onAction="#irAPerfil">
+                <Button fx:id="btnPerfil" layoutX="24.0" layoutY="442.0" mnemonicParsing="false" onAction="#irAPerfil" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Perfil">
                     <effect>
                         <Lighting diffuseConstant="1.4">
                             <bumpInput>
@@ -104,7 +104,7 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button fx:id="btnPerfil1" layoutX="23.0" layoutY="504.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Reservas" onAction="#irAReservas">
+                <Button fx:id="btnPerfil1" layoutX="23.0" layoutY="504.0" mnemonicParsing="false" onAction="#irAReservas" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Reservas">
                     <effect>
                         <Lighting diffuseConstant="1.4">
                             <bumpInput>
@@ -121,7 +121,7 @@
         <AnchorPane layoutX="293.0" layoutY="25.0" prefHeight="151.0" prefWidth="572.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;">
             <children>
                 <Text layoutX="40.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reporte Seleccionado:" wrappingWidth="112.0517578125" />
-                <Button fx:id="btnEditar" layoutX="251.0" layoutY="30.0" mnemonicParsing="false" style="-fx-background-color: #ffde21;" text="Editar">
+                <Button fx:id="btnEditar" layoutX="251.0" layoutY="30.0" mnemonicParsing="false" onAction="#editarReporte" style="-fx-background-color: #ffde21;" text="Editar">
                     <effect>
                         <Lighting diffuseConstant="1.53" specularConstant="0.76">
                             <bumpInput>
@@ -146,7 +146,7 @@
                     </effect>
                 </Button>
                 <Text layoutX="417.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nuevo Reporte:" wrappingWidth="125.0517578125" />
-                <Button fx:id="btnCrear" layoutX="441.0" layoutY="69.0" mnemonicParsing="false" style="-fx-background-color: #57a733;" text="Crear" textFill="WHITE">
+                <Button fx:id="btnCrear" layoutX="441.0" layoutY="69.0" mnemonicParsing="false" onAction="#crearReporte" style="-fx-background-color: #57a733;" text="Crear" textFill="WHITE">
                     <effect>
                         <Lighting diffuseConstant="1.58" specularConstant="0.76">
                             <bumpInput>
@@ -165,18 +165,6 @@
                 <Font name="System Bold" size="25.0" />
             </font>
         </Text>
-        <Text fill="#6b6b52" layoutX="204.0" layoutY="220.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Buscar por nombre" wrappingWidth="111.0">
-            <font>
-                <Font name="System Bold" size="13.0" />
-            </font>
-        </Text>
-        <TextField layoutX="282.0" layoutY="204.0" prefHeight="39.0" prefWidth="112.0" />
-        <Text fill="#6b6b52" layoutX="468.0" layoutY="228.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categoria" wrappingWidth="111.0">
-            <font>
-                <Font name="System Bold" size="13.0" />
-            </font>
-        </Text>
-        <TextField layoutX="531.0" layoutY="204.0" prefHeight="39.0" prefWidth="112.0" />
         <TableView fx:id="tablaReportes" layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0">
             <columns>
                 <TableColumn fx:id="colIdReporte" prefWidth="70.0" text="ID" />
@@ -185,7 +173,7 @@
                 <TableColumn fx:id="colPreguntaNegocio" prefWidth="450.0" text="Pregunta" />
             </columns>
         </TableView>
-        <ComboBox fx:id="cbReporte" layoutX="270.0" layoutY="235.0" prefHeight="39.0" prefWidth="250.0" onAction="#seleccionarReporte" />
-        <Button fx:id="btnGenerar" layoutX="746.0" layoutY="205.0" mnemonicParsing="false" text="Generar PDF" onAction="#generarPDF" />
+        <ComboBox fx:id="cbReporte" layoutX="215.0" layoutY="205.0" onAction="#seleccionarReporte" prefHeight="39.0" prefWidth="250.0" />
+        <Button fx:id="btnGenerar" layoutX="746.0" layoutY="205.0" mnemonicParsing="false" onAction="#generarPDF" text="Generar PDF" />
     </children>
 </AnchorPane>

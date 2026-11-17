@@ -94,9 +94,25 @@ public class RegistroAdminController {
 
         try {
             UsuarioDAO usuarioDAO = new UsuarioDAO();
+            if (usuarioDAO.buscarPorNombreUsuario(fldUser.getText().trim()) != null) {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Usuario existente",
+                        "El nombre de usuario '" + fldUser.getText().trim() + "' ya está registrado. Use otro.");
+                return;
+            }
+            boolean idDuplicado = id != null && usuarioDAO.buscarPorId(id) != null;
+            if (idDuplicado) {
+                id = null;
+            }
+
             RolDAO rolDAO = new RolDAO();
             Rol rolAdmin = rolDAO.buscarPorNombre("ADMINISTRADOR");
-            Long idRol = (rolAdmin != null && rolAdmin.getIdRol() != null) ? rolAdmin.getIdRol() : 1L;
+            if (rolAdmin == null || rolAdmin.getIdRol() == null) {
+                mostrarAlerta(event, Alert.AlertType.ERROR, "Catálogo incompleto",
+                        "No existe el rol ADMINISTRADOR. Ejecute Database/DML/01_seed_data.sql "
+                        + "(el script termina con COMMIT) y vuelva a intentar.");
+                return;
+            }
+            Long idRol = rolAdmin.getIdRol();
 
             UsuarioSistema nuevoUsuario = new UsuarioSistema(
                     id,
@@ -106,15 +122,22 @@ public class RegistroAdminController {
                     idRol,
                     null
             );
-            usuarioDAO.registrarUsuario(nuevoUsuario, fldContrasena.getText().trim());
+            Long idGenerado = usuarioDAO.registrarUsuario(nuevoUsuario, fldContrasena.getText().trim());
+            String avisoId = idDuplicado
+                    ? "\nEl ID ingresado ya existía; se generó automáticamente el ID #" + idGenerado + "."
+                    : "";
 
             mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
                     "El administrador " + fldNombre.getText().trim() + " fue registrado exitosamente con usuario: "
-                    + fldUser.getText().trim() + ".\nYa puede iniciar sesión.");
+                    + fldUser.getText().trim() + ".\nID asignado: #" + idGenerado + "." + avisoId
+                    + "\nYa puede iniciar sesión.");
             volverAlInicioSesion(event);
         } catch (SQLException e) {
+            String detalle = e.getErrorCode() == 1
+                    ? "El ID o el nombre de usuario ya están registrados. Deje el ID vacío para generarlo automáticamente."
+                    : e.getMessage();
             mostrarAlerta(event, Alert.AlertType.ERROR, "Error de registro",
-                    "No se pudo guardar el administrador en Oracle XE: " + e.getMessage());
+                    "No se pudo guardar el administrador en Oracle XE: " + detalle);
         }
     }
 

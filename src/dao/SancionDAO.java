@@ -61,6 +61,61 @@ public class SancionDAO {
         }
     }
 
+    public Sancion buscarPorId(Long idSancion) throws SQLException {
+        if (idSancion == null) {
+            return null;
+        }
+        String sql = "SELECT id_sancion, tipo_sancion, descripcion, fecha_sancion, valor, id_reserva, id_servicio "
+                   + "FROM Sancion WHERE id_sancion = ?";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, idSancion);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearSancion(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    public boolean actualizarSancion(Sancion sancion) throws SQLException {
+        if (sancion == null || sancion.getIdSancion() == null || sancion.getValor() == null
+                || sancion.getIdReserva() == null) {
+            throw new IllegalArgumentException("Datos de la sanción incompletos.");
+        }
+        String sql = "UPDATE Sancion SET tipo_sancion = ?, descripcion = ?, fecha_sancion = ?, "
+                   + "valor = ?, id_reserva = ?, id_servicio = ? WHERE id_sancion = ?";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, sancion.getTipoSancion());
+            ps.setString(2, sancion.getDescripcion());
+            ps.setTimestamp(3, Timestamp.valueOf(sancion.getFechaSancion() == null
+                    ? LocalDateTime.now() : sancion.getFechaSancion()));
+            ps.setBigDecimal(4, sancion.getValor());
+            ps.setLong(5, sancion.getIdReserva());
+            if (sancion.getIdServicio() != null) {
+                ps.setLong(6, sancion.getIdServicio());
+            } else {
+                ps.setNull(6, Types.NUMERIC);
+            }
+            ps.setLong(7, sancion.getIdSancion());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean eliminarSancion(Long idSancion) throws SQLException {
+        if (idSancion == null) {
+            return false;
+        }
+        String sql = "DELETE FROM Sancion WHERE id_sancion = ?";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, idSancion);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
     public List<Sancion> listarTodos() throws SQLException {
         List<Sancion> lista = new ArrayList<>();
         String sql = "SELECT id_sancion, tipo_sancion, descripcion, fecha_sancion, valor, id_reserva, id_servicio "

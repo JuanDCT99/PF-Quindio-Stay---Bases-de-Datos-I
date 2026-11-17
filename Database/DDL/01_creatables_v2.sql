@@ -104,6 +104,19 @@ CREATE TABLE Huesped (
 );
 
 -- ===========================
+-- PLAN (se crea antes de Reserva por fk_plan)
+-- ===========================
+CREATE TABLE Plan (
+    id_plan              NUMBER(10) NOT NULL CONSTRAINT pk_plan PRIMARY KEY,
+    nombre_plan          VARCHAR2(120) NOT NULL,
+    descripcion          VARCHAR2(500) NULL,
+    incluye_desayuno     CHAR(1) NOT NULL CHECK (incluye_desayuno IN ('S', 'N')),
+    valor_adicional_noche NUMBER(12,2) NOT NULL CHECK (valor_adicional_noche >= 0),
+    id_alojamiento       NUMBER(10) NOT NULL,
+    CONSTRAINT fk_plan_alojamiento FOREIGN KEY (id_alojamiento) REFERENCES Alojamiento (id_alojamiento)
+);
+
+-- ===========================
 -- 8. RESERVA
 -- ===========================
 CREATE TABLE Reserva (
@@ -242,7 +255,8 @@ CREATE TABLE Folio (
     fecha_apertura  TIMESTAMP NOT NULL,
     fecha_cierre    TIMESTAMP NULL,
     estado          VARCHAR2(10) NOT NULL CHECK (estado IN ('ABIERTO', 'CERRADO')),
-    CONSTRAINT chk_fechas_folio CHECK (fecha_cierre >= fecha_apertura)
+    CONSTRAINT chk_fechas_folio CHECK (fecha_cierre >= fecha_apertura),
+    CONSTRAINT fk_folio_reserva FOREIGN KEY (id_reserva) REFERENCES Reserva (id_reserva) ON DELETE CASCADE
 );
 
 -- ===========================
@@ -351,19 +365,6 @@ CREATE TABLE Municipio (
     id_municipio      NUMBER(10) NOT NULL CONSTRAINT pk_municipio PRIMARY KEY,
     nombre_municipio  VARCHAR2(60) NOT NULL,
     departamento      VARCHAR2(60) NOT NULL
-);
-
--- ===========================
--- 26. PLAN
--- ===========================
-CREATE TABLE Plan (
-    id_plan              NUMBER(10) NOT NULL CONSTRAINT pk_plan PRIMARY KEY,
-    nombre_plan          VARCHAR2(120) NOT NULL,
-    descripcion          VARCHAR2(500) NULL,
-    incluye_desayuno     CHAR(1) NOT NULL CHECK (incluye_desayuno IN ('S', 'N')),
-    valor_adicional_noche NUMBER(12,2) NOT NULL CHECK (valor_adicional_noche >= 0),
-    id_alojamiento       NUMBER(10) NOT NULL,
-    CONSTRAINT fk_plan_alojamiento FOREIGN KEY (id_alojamiento) REFERENCES Alojamiento (id_alojamiento)
 );
 
 -- ===========================

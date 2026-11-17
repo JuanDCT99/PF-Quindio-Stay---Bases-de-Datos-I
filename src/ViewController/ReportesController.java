@@ -9,8 +9,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -23,8 +25,10 @@ import service.ReporteService;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.net.URL;
 
 public class ReportesController {
@@ -51,8 +55,12 @@ public class ReportesController {
         colNombreReporte.setCellValueFactory(new PropertyValueFactory<>("nombreReporte"));
         colNivel.setCellValueFactory(new PropertyValueFactory<>("nivel"));
         colPreguntaNegocio.setCellValueFactory(new PropertyValueFactory<>("preguntaNegocio"));
+        recargarReportes(null);
+    }
 
+    private void recargarReportes(Long idParaSeleccionar) {
         try {
+            Reporte anterior = cbReporte.getValue();
             List<Reporte> reportes = reporteService.listarReportes();
             tablaReportes.setItems(FXCollections.observableArrayList(reportes));
             cbReporte.setItems(FXCollections.observableArrayList(reportes));
@@ -68,9 +76,23 @@ public class ReportesController {
                     return null;
                 }
             });
-            if (!reportes.isEmpty()) {
+
+            Long idBuscado = idParaSeleccionar != null ? idParaSeleccionar
+                    : (anterior != null ? anterior.getIdReporte() : null);
+            if (idBuscado != null) {
+                for (Reporte reporte : reportes) {
+                    if (idBuscado.equals(reporte.getIdReporte())) {
+                        cbReporte.getSelectionModel().select(reporte);
+                        break;
+                    }
+                }
+            }
+            if (cbReporte.getValue() == null && !reportes.isEmpty()) {
                 cbReporte.getSelectionModel().selectFirst();
-                reporteSeleccionado = reportes.get(0).getIdReporte().intValue();
+            }
+            Reporte seleccionado = cbReporte.getValue();
+            if (seleccionado != null && seleccionado.getIdReporte() != null) {
+                reporteSeleccionado = seleccionado.getIdReporte().intValue();
             }
         } catch (SQLException e) {
             mostrarAlerta(null, Alert.AlertType.ERROR, "No se pudieron cargar los reportes", e.getMessage());
@@ -140,12 +162,12 @@ public class ReportesController {
                 return;
             }
 
-            // Nombre del reporte segun su ID
-            String[] nombresReportes = {"Catalogo de habitaciones", "Habitaciones nunca reservadas",
-                    "Tarifario vigente", "Ingresos por temporada", "Reservas y comisiones",
-                    "Estado de folios", "Uso de servicios", "Cancelaciones", "Análisis de cancelaciones",
-                    "Segmentacion RFM"};
-            String nombreReporte = "Reporte_" + reporteSeleccionado + "_" + nombresReportes[reporteSeleccionado - 1];
+            // Nombre del reporte tomado del catálogo (soporta reportes creados por el usuario)
+            Reporte seleccionado = cbReporte.getValue();
+            String nombreBase = seleccionado != null && seleccionado.getNombreReporte() != null
+                    ? seleccionado.getNombreReporte().replaceAll("[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ ]", "").trim().replaceAll("\\s+", "_")
+                    : "Personalizado";
+            String nombreReporte = "Reporte_" + reporteSeleccionado + "_" + nombreBase;
 
             ReportePDFService pdfService = new ReportePDFService(nombreReporte);
             pdfService.generar(datos, file.getAbsolutePath());
@@ -156,6 +178,10 @@ public class ReportesController {
         } catch (SQLException e) {
             mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos",
                     "No se pudo conectar a la base de datos.\nDetalle: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Reporte sin consulta",
+                    "El reporte seleccionado no tiene una consulta SQL asociada. "
+                    + "Solo los 10 reportes originales pueden generarse en PDF.");
         } catch (Exception e) {
             mostrarAlerta(event, Alert.AlertType.ERROR, "Error al generar PDF",
                     "No se pudo generar el reporte.\nDetalle: " + e.getMessage());
@@ -170,6 +196,120 @@ public class ReportesController {
         Reporte seleccionado = cbReporte.getValue();
         if (seleccionado != null && seleccionado.getIdReporte() != null) {
             reporteSeleccionado = seleccionado.getIdReporte().intValue();
+        }
+    }
+
+    @FXML
+    private void crearReporte(ActionEvent event) {
+        TextInputDialog dlgNombre = new TextInputDialog("");
+        dlgNombre.setTitle("Nuevo Reporte | QuindíoStay");
+        dlgNombre.setHeaderText("Creación de Reporte");
+        dlgNombre.setContentText("Nombre del reporte:");
+        Optional<String> nombre = dlgNombre.showAndWait();
+        if (nombre.isEmpty()) return;
+
+        ChoiceDialog<String> dlgNivel = new ChoiceDialog<>("SIMPLE",
+                List.of("SIMPLE", "INTERMEDIO", "AVANZADO"));
+        dlgNivel.setTitle("Nivel del Reporte");
+        dlgNivel.setHeaderText("Clasificación del reporte");
+        dlgNivel.setContentText("Seleccione el nivel:");
+        Optional<String> nivel = dlgNivel.showAndWait();
+        if (nivel.isEmpty()) return;
+
+        TextInputDialog dlgPregunta = new TextInputDialog("");
+        dlgPregunta.setTitle("Nuevo Reporte | QuindíoStay");
+        dlgPregunta.setHeaderText("Pregunta de negocio");
+        dlgPregunta.setContentText("¿Qué pregunta responde este reporte?");
+        Optional<String> pregunta = dlgPregunta.showAndWait();
+        if (pregunta.isEmpty()) return;
+
+        Reporte reporte = new Reporte();
+        reporte.setNombreReporte(nombre.get().trim());
+        reporte.setNivel(nivel.get());
+        reporte.setPreguntaNegocio(pregunta.get().trim());
+        if (!reporte.esValido()) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Datos inválidos",
+                    "Verifique el nombre (máx. 120 caracteres) y la pregunta (máx. 500 caracteres).");
+            return;
+        }
+
+        try {
+            Long idGenerado = reporteService.crearReporte(reporte);
+            recargarReportes(idGenerado);
+            mostrarAlerta(event, Alert.AlertType.INFORMATION, "Reporte Creado",
+                    "El reporte #" + idGenerado + " fue agregado al catálogo.");
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void editarReporte(ActionEvent event) {
+        TextInputDialog dlgId = new TextInputDialog("1");
+        dlgId.setTitle("Editar Reporte | QuindíoStay");
+        dlgId.setHeaderText("Modificación de Reporte");
+        dlgId.setContentText("ID del reporte:");
+        Optional<String> id = dlgId.showAndWait();
+        if (id.isEmpty()) return;
+
+        try {
+            Long idReporte = Long.valueOf(id.get().trim());
+            Reporte reporte = reporteService.buscarPorId(idReporte);
+            if (reporte == null) {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "No encontrado",
+                        "No existe un reporte con ID " + idReporte + ".");
+                return;
+            }
+
+            List<String> niveles = new ArrayList<>(List.of("SIMPLE", "INTERMEDIO", "AVANZADO"));
+            String nivelActual = reporte.getNivel();
+            if (nivelActual != null && !niveles.contains(nivelActual)) {
+                niveles.add(0, nivelActual);
+            }
+            ChoiceDialog<String> dlgNivel = new ChoiceDialog<>(
+                    nivelActual != null ? nivelActual : niveles.get(0), niveles);
+            dlgNivel.setTitle("Nivel del Reporte");
+            dlgNivel.setHeaderText("Reporte #" + idReporte);
+            dlgNivel.setContentText("Seleccione el nivel:");
+            Optional<String> nivel = dlgNivel.showAndWait();
+            if (nivel.isEmpty()) return;
+
+            TextInputDialog dlgNombre = new TextInputDialog(
+                    reporte.getNombreReporte() == null ? "" : reporte.getNombreReporte());
+            dlgNombre.setTitle("Editar Reporte | QuindíoStay");
+            dlgNombre.setHeaderText("Nombre del reporte");
+            dlgNombre.setContentText("Nombre del reporte:");
+            Optional<String> nombre = dlgNombre.showAndWait();
+            if (nombre.isEmpty()) return;
+
+            TextInputDialog dlgPregunta = new TextInputDialog(
+                    reporte.getPreguntaNegocio() == null ? "" : reporte.getPreguntaNegocio());
+            dlgPregunta.setTitle("Editar Reporte | QuindíoStay");
+            dlgPregunta.setHeaderText("Pregunta de negocio");
+            dlgPregunta.setContentText("¿Qué pregunta responde este reporte?");
+            Optional<String> pregunta = dlgPregunta.showAndWait();
+            if (pregunta.isEmpty()) return;
+
+            reporte.setNombreReporte(nombre.get().trim());
+            reporte.setNivel(nivel.get());
+            reporte.setPreguntaNegocio(pregunta.get().trim());
+            if (!reporte.esValido()) {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Datos inválidos",
+                        "Verifique el nombre (máx. 120 caracteres) y la pregunta (máx. 500 caracteres).");
+                return;
+            }
+
+            if (reporteService.actualizarReporte(reporte)) {
+                recargarReportes(idReporte);
+                mostrarAlerta(event, Alert.AlertType.INFORMATION, "Reporte Actualizado",
+                        "El reporte #" + idReporte + " fue actualizado.");
+            } else {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Aviso", "No se pudo actualizar el reporte.");
+            }
+        } catch (NumberFormatException e) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Dato inválido", "El ID debe ser numérico.");
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
         }
     }
 

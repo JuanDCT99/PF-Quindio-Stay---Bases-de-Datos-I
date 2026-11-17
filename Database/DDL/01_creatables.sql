@@ -213,7 +213,8 @@ CREATE TABLE Folio (
     fecha_apertura  TIMESTAMP NOT NULL,
     fecha_cierre    TIMESTAMP NULL,
     estado          VARCHAR2(10) NOT NULL CHECK (estado IN ('ABIERTO', 'CERRADO')),
-    CONSTRAINT chk_fechas_folio CHECK (fecha_cierre >= fecha_apertura)
+    CONSTRAINT chk_fechas_folio CHECK (fecha_cierre >= fecha_apertura),
+    CONSTRAINT fk_folio_reserva FOREIGN KEY (id_reserva) REFERENCES Reserva (id_reserva) ON DELETE CASCADE
 );
 
 -- ===========================

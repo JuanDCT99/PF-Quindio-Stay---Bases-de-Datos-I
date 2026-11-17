@@ -19,7 +19,7 @@ public class AlojamientoDAO {
         if (idAlojamiento == null) {
             return null;
         }
-        String sql = "SELECT id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas, id_municipio "
+        String sql = "SELECT id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas "
                    + "FROM Alojamiento WHERE id_alojamiento = ?";
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -35,7 +35,7 @@ public class AlojamientoDAO {
 
     public List<Alojamiento> listarTodos() throws SQLException {
         List<Alojamiento> lista = new ArrayList<>();
-        String sql = "SELECT id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas, id_municipio "
+        String sql = "SELECT id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas "
                    + "FROM Alojamiento ORDER BY nombre_alojamiento";
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -60,10 +60,6 @@ public class AlojamientoDAO {
             a.setHoraSalidaLimite(ts.toLocalDateTime());
         }
         a.setPlazoConfirmacionHoras(rs.getInt("plazo_confirmacion_horas"));
-        long idMun = rs.getLong("id_municipio");
-        if (!rs.wasNull()) {
-            a.setIdMunicipio(idMun);
-        }
         return a;
     }
 }

@@ -34,8 +34,8 @@
                         <Font size="13.0" />
                     </font>
                 </Text>
-                <TextField fx:id="fldId" layoutX="22.0" layoutY="98.0" prefHeight="39.0" prefWidth="163.0" />
-                <Text layoutX="22.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID:">
+                <TextField fx:id="fldId" layoutX="22.0" layoutY="98.0" prefHeight="39.0" prefWidth="163.0" promptText="Se genera automáticamente" />
+                <Text layoutX="22.0" layoutY="93.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID (opcional):">
                     <font>
                         <Font size="13.0" />
                     </font>
