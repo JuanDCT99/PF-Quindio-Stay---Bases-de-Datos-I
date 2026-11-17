@@ -99,6 +99,33 @@ public class ReporteService {
         }
     }
 
+    public boolean eliminarReporte(Long idReporte) throws SQLException {
+        if (idReporte == null) {
+            throw new IllegalArgumentException("ID del reporte requerido.");
+        }
+        try (Connection conn = ConexionBD.getConexion()) {
+            boolean autoCommitOriginal = conn.getAutoCommit();
+            conn.setAutoCommit(false);
+            try {
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Reporte_Generado WHERE id_reporte = ?")) {
+                    ps.setLong(1, idReporte);
+                    ps.executeUpdate();
+                }
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Reporte WHERE id_reporte = ?")) {
+                    ps.setLong(1, idReporte);
+                    int filas = ps.executeUpdate();
+                    conn.commit();
+                    return filas > 0;
+                }
+            } catch (SQLException | RuntimeException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(autoCommitOriginal);
+            }
+        }
+    }
+
     private Reporte mapearReporte(ResultSet rs) throws SQLException {
         Reporte reporte = new Reporte();
         reporte.setIdReporte(rs.getLong("id_reporte"));
@@ -202,14 +229,16 @@ public class ReporteService {
         "    tm.anio                      AS anio, " +
         "    tm.nombre_temporada          AS temporada, " +
         "    t.nombre_tipo                AS tipo_habitacion, " +
-        "    COUNT(rh.id_reserva_habitacion) AS noches_vendidas, " +
-        "    SUM(tar.precio_noche)        AS ingreso_abstracto " +
+        "    SUM(rh.fecha_salida_reservada - rh.fecha_entrada_reservada + rh.noches_adicionales) AS noches_vendidas, " +
+        "    SUM(tar.precio_noche * (rh.fecha_salida_reservada - rh.fecha_entrada_reservada + rh.noches_adicionales)) AS ingreso_total " +
         "FROM Reserva_Habitacion rh " +
         "JOIN Reserva r ON rh.id_reserva = r.id_reserva " +
-        "JOIN Tipo_Habitacion t ON rh.id_habitacion = t.id_tipo_habitacion " +
-        "JOIN Tarifa tar ON t.id_tipo_habitacion = tar.id_tipo_habitacion " +
-        "JOIN Temporada tm ON rh.id_habitacion = tm.id_temporada " +
+        "JOIN Habitacion h ON rh.id_habitacion = h.id_habitacion " +
+        "JOIN Tipo_Habitacion t ON h.id_tipo_habitacion = t.id_tipo_habitacion " +
+        "JOIN Tarifa tar ON tar.id_tipo_habitacion = t.id_tipo_habitacion " +
+        "JOIN Temporada tm ON tar.id_temporada = tm.id_temporada " +
         "WHERE r.estado <> 'CANCELADA' " +
+        "  AND rh.fecha_entrada_reservada BETWEEN tm.fecha_inicio AND tm.fecha_fin " +
         "GROUP BY tm.anio, tm.nombre_temporada, t.nombre_tipo " +
         "ORDER BY tm.anio, tm.nombre_temporada, t.nombre_tipo";
 
@@ -237,6 +266,7 @@ public class ReporteService {
         "    rh.fecha_entrada_reservada      AS entrada_reservada, " +
         "    rh.fecha_salida_reservada       AS salida_reservada, " +
         "    r.precio_total                  AS precio_total_reserva, " +
+        "    COALESCE(u.total_usos, 0)       AS consumo_servicios, " +
         "    COALESCE(s.total_sanciones, 0)  AS total_sanciones, " +
         "    COALESCE(p.total_pagado, 0)     AS total_pagado, " +
         "    (COALESCE(r.precio_total, 0) + COALESCE(s.total_sanciones, 0) - COALESCE(p.total_pagado, 0)) AS saldo_pendiente " +
@@ -244,13 +274,16 @@ public class ReporteService {
         "JOIN Reserva_Habitacion rh ON r.id_reserva = rh.id_reserva " +
         "JOIN Habitacion h ON rh.id_habitacion = h.id_habitacion " +
         "LEFT JOIN ( " +
+        "    SELECT id_reserva_habitacion, COUNT(*) AS total_usos FROM Uso_Servicio GROUP BY id_reserva_habitacion " +
+        ") u ON rh.id_reserva_habitacion = u.id_reserva_habitacion " +
+        "LEFT JOIN ( " +
         "    SELECT id_reserva, SUM(valor) AS total_sanciones FROM Sancion GROUP BY id_reserva " +
         ") s ON r.id_reserva = s.id_reserva " +
         "LEFT JOIN ( " +
         "    SELECT id_reserva, SUM(monto) AS total_pagado FROM Pago GROUP BY id_reserva " +
         ") p ON r.id_reserva = p.id_reserva " +
         "WHERE r.estado <> 'CANCELADA' " +
-        "HAVING (COALESCE(r.precio_total, 0) + COALESCE(s.total_sanciones, 0) - COALESCE(p.total_pagado, 0)) > 0 " +
+        "  AND (COALESCE(r.precio_total, 0) + COALESCE(s.total_sanciones, 0) - COALESCE(p.total_pagado, 0)) > 0 " +
         "ORDER BY r.id_reserva, h.numero_habitacion";
 
     private static final String SQL_REPORTE_7 =
@@ -260,7 +293,8 @@ public class ReporteService {
         "    s.tipo_servicio               AS tipo_servicio, " +
         "    a.nombre_alojamiento          AS alojamiento, " +
         "    COUNT(u.id_uso_servicio)      AS total_usos, " +
-        "    SUM(CASE WHEN u.solicitud IS NOT NULL AND u.solicitud != '' THEN 1 ELSE 0 END) AS usos_registrados " +
+        "    SUM(CASE WHEN u.solicitud IS NOT NULL AND u.solicitud != '' THEN 1 ELSE 0 END) AS usos_registrados, " +
+        "    ROUND(AVG((CAST(u.fecha_hora_fin AS DATE) - CAST(u.fecha_hora_inicio AS DATE)) * 1440), 2) AS tiempo_promedio_minutos " +
         "FROM Servicio s " +
         "JOIN Alojamiento a ON s.id_alojamiento = a.id_alojamiento " +
         "LEFT JOIN Uso_Servicio u ON u.id_servicio = s.id_servicio " +
@@ -294,33 +328,66 @@ public class ReporteService {
         "    i.tipo_canal                     AS canal, " +
         "    tm.nombre_temporada              AS temporada, " +
         "    tm.anio                          AS anio, " +
-        "    COUNT(r.id_reserva)              AS total_reservas, " +
-        "    SUM(CASE WHEN r.estado = 'CANCELADA' THEN 1 ELSE 0 END) AS canceladas, " +
-        "    SUM(CASE WHEN r.estado = 'NO_SHOW' THEN 1 ELSE 0 END) AS no_show " +
+        "    COUNT(DISTINCT r.id_reserva)     AS total_reservas, " +
+        "    COUNT(DISTINCT CASE WHEN r.estado = 'CANCELADA' THEN r.id_reserva END) AS canceladas, " +
+        "    COUNT(DISTINCT CASE WHEN r.estado = 'NO_SHOW' THEN r.id_reserva END) AS no_show " +
         "FROM Reserva r " +
         "JOIN Reserva_Habitacion rh ON r.id_reserva = rh.id_reserva " +
         "JOIN Intermediario i ON r.id_intermediario = i.id_intermediario " +
-        "JOIN Temporada tm ON rh.id_temporada = tm.id_temporada " +
+        "JOIN Temporada tm ON rh.fecha_entrada_reservada BETWEEN tm.fecha_inicio AND tm.fecha_fin " +
         "WHERE r.estado IN ('CANCELADA', 'NO_SHOW') " +
         "GROUP BY i.tipo_canal, tm.nombre_temporada, tm.anio " +
         "ORDER BY i.tipo_canal, tm.anio";
 
     private static final String SQL_REPORTE_10 =
+        "WITH RFM_Recencia AS (" +
+        "    SELECT h.id_huesped, MAX(rh.fecha_entrada_reservada) AS fecha_ultima_estancia " +
+        "    FROM Huesped h JOIN Reserva r ON h.id_huesped = r.id_titular " +
+        "    JOIN Reserva_Habitacion rh ON r.id_reserva = rh.id_reserva " +
+        "    GROUP BY h.id_huesped" +
+        "), " +
+        "RFM_Frecuencia AS (" +
+        "    SELECT h.id_huesped, COUNT(DISTINCT r.id_reserva) AS total_reservas " +
+        "    FROM Huesped h JOIN Reserva r ON h.id_huesped = r.id_titular " +
+        "    GROUP BY h.id_huesped" +
+        "), " +
+        "RFM_Gasto AS (" +
+        "    SELECT h.id_huesped, SUM(r.precio_total) AS total_gastado " +
+        "    FROM Huesped h JOIN Reserva r ON h.id_huesped = r.id_titular " +
+        "    GROUP BY h.id_huesped" +
+        "), " +
+        "RFM_Scores AS (" +
+        "    SELECT id_huesped, " +
+        "        NTILE(5) OVER (ORDER BY fecha_ultima_estancia DESC NULLS LAST) AS puntuacion_recencia, " +
+        "        NTILE(5) OVER (ORDER BY total_reservas DESC) AS puntuacion_frecuencia, " +
+        "        NTILE(5) OVER (ORDER BY total_gastado DESC) AS puntuacion_gasto " +
+        "    FROM (" +
+        "        SELECT h.id_huesped, rec.fecha_ultima_estancia, " +
+        "            COALESCE(fre.total_reservas, 0) AS total_reservas, " +
+        "            COALESCE(gas.total_gastado, 0) AS total_gastado " +
+        "        FROM Huesped h " +
+        "        LEFT JOIN RFM_Recencia rec ON h.id_huesped = rec.id_huesped " +
+        "        LEFT JOIN RFM_Frecuencia fre ON h.id_huesped = fre.id_huesped " +
+        "        LEFT JOIN RFM_Gasto gas ON h.id_huesped = gas.id_huesped" +
+        "    )" +
+        ") " +
         "SELECT " +
         "    h.id_huesped, " +
         "    h.nombre, " +
         "    h.documento, " +
         "    h.telefono, " +
         "    h.correo, " +
-        "    MAX(rh.fecha_entrada_reservada) AS fecha_ultima_estancia " +
+        "    rec.fecha_ultima_estancia, " +
+        "    COALESCE(fre.total_reservas, 0) AS frecuencia, " +
+        "    COALESCE(gas.total_gastado, 0) AS gasto_total, " +
+        "    sc.puntuacion_recencia, " +
+        "    sc.puntuacion_frecuencia, " +
+        "    sc.puntuacion_gasto, " +
+        "    ROUND((sc.puntuacion_recencia + sc.puntuacion_frecuencia + sc.puntuacion_gasto) / 3.0, 2) AS puntuacion_rf_total " +
         "FROM Huesped h " +
-        "LEFT JOIN Reserva r ON h.id_huesped = r.id_titular " +
-        "LEFT JOIN Reserva_Habitacion rh ON r.id_reserva = rh.id_reserva " +
-        "GROUP BY " +
-        "    h.id_huesped, " +
-        "    h.nombre, " +
-        "    h.documento, " +
-        "    h.telefono, " +
-        "    h.correo " +
-        "ORDER BY fecha_ultima_estancia DESC";
+        "LEFT JOIN RFM_Recencia rec ON h.id_huesped = rec.id_huesped " +
+        "LEFT JOIN RFM_Frecuencia fre ON h.id_huesped = fre.id_huesped " +
+        "LEFT JOIN RFM_Gasto gas ON h.id_huesped = gas.id_huesped " +
+        "LEFT JOIN RFM_Scores sc ON h.id_huesped = sc.id_huesped " +
+        "ORDER BY puntuacion_rf_total DESC";
 }

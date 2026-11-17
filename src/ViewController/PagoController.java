@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import dao.FolioDAO;
 import dao.PagoDAO;
+import dao.ReservaDAO;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,11 +25,13 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Pago;
+import model.Reserva;
 
 public class PagoController {
 
     private final PagoDAO pagoDAO = new PagoDAO();
     private final FolioDAO folioDAO = new FolioDAO();
+    private final ReservaDAO reservaDAO = new ReservaDAO();
 
     @FXML
     private TableView<Pago> tablaPagos;
@@ -86,6 +89,12 @@ public class PagoController {
 
         try {
             Long idReserva = Long.parseLong(resId.get().trim());
+            Reserva reserva = reservaDAO.buscarPorId(idReserva);
+            if (reserva == null) {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Reserva no encontrada",
+                        "No existe la reserva #" + idReserva + ". Verifique el ID antes de registrar el pago.");
+                return;
+            }
             BigDecimal monto = new BigDecimal(resMonto.get().trim());
             if (monto.compareTo(BigDecimal.ZERO) <= 0) {
                 mostrarAlerta(event, Alert.AlertType.WARNING, "Monto inválido", "El monto debe ser mayor a cero.");

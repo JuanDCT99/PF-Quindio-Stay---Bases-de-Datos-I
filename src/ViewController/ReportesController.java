@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TableColumn;
@@ -308,6 +309,47 @@ public class ReportesController {
             }
         } catch (NumberFormatException e) {
             mostrarAlerta(event, Alert.AlertType.WARNING, "Dato inválido", "El ID debe ser numérico.");
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void eliminarReporte(ActionEvent event) {
+        Reporte seleccionado = tablaReportes.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            seleccionado = cbReporte.getValue();
+        }
+        if (seleccionado == null || seleccionado.getIdReporte() == null) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Sin selección",
+                    "Seleccione el reporte que desea eliminar.");
+            return;
+        }
+
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION,
+                "¿Eliminar el reporte #" + seleccionado.getIdReporte() + " - "
+                        + seleccionado.getNombreReporte() + "?",
+                ButtonType.YES, ButtonType.NO);
+        if (event.getSource() instanceof Node) {
+            confirmacion.initOwner(((Node) event.getSource()).getScene().getWindow());
+        }
+        confirmacion.setTitle("QuindioStay");
+        confirmacion.setHeaderText("Confirmar eliminación");
+        Optional<ButtonType> respuesta = confirmacion.showAndWait();
+        if (respuesta.isEmpty() || respuesta.get() != ButtonType.YES) {
+            return;
+        }
+
+        try {
+            boolean eliminado = reporteService.eliminarReporte(seleccionado.getIdReporte());
+            if (eliminado) {
+                recargarReportes(null);
+                mostrarAlerta(event, Alert.AlertType.INFORMATION, "Reporte eliminado",
+                        "El reporte #" + seleccionado.getIdReporte() + " fue eliminado del catálogo.");
+            } else {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Aviso",
+                        "No se pudo eliminar el reporte. Puede que ya no exista.");
+            }
         } catch (SQLException e) {
             mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
         }

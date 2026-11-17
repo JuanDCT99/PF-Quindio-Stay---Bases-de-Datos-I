@@ -10,6 +10,7 @@ import java.util.List;
 
 import model.Personal;
 import utils.ConexionBD;
+import utils.ValidacionesBD;
 
 /**
  * Data Access Object (DAO) para la entidad Personal.
@@ -17,13 +18,19 @@ import utils.ConexionBD;
 public class PersonalDAO {
 
     public Long registrarPersonal(Personal personal) throws SQLException {
+        try (Connection conn = ConexionBD.getConexion()) {
+            return registrarPersonal(conn, personal);
+        }
+    }
+
+    public Long registrarPersonal(Connection conn, Personal personal) throws SQLException {
         if (personal == null) {
             throw new IllegalArgumentException("Personal no puede ser nulo.");
         }
 
         Long id = personal.getIdPersonal();
         if (id == null) {
-            id = obtenerSiguienteId();
+            id = obtenerSiguienteId(conn);
             personal.setIdPersonal(id);
         }
 
@@ -37,8 +44,8 @@ public class PersonalDAO {
         String sql = "INSERT INTO Personal (id_personal, nombre, funcion, cargo, salario, horario_trabajo, id_alojamiento) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConexionBD.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        ValidacionesBD.validarAlojamiento(conn, personal.getIdAlojamiento());
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, personal.getIdPersonal());
             ps.setString(2, personal.getNombre());
             ps.setString(3, personal.getFuncion());
@@ -84,9 +91,14 @@ public class PersonalDAO {
     }
 
     public Long obtenerSiguienteId() throws SQLException {
+        try (Connection conn = ConexionBD.getConexion()) {
+            return obtenerSiguienteId(conn);
+        }
+    }
+
+    public Long obtenerSiguienteId(Connection conn) throws SQLException {
         String sql = "SELECT NVL(MAX(id_personal), 0) + 1 AS siguiente_id FROM Personal";
-        try (Connection conn = ConexionBD.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getLong("siguiente_id");

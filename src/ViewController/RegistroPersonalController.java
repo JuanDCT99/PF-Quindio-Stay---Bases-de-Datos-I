@@ -14,13 +14,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.sql.SQLException;
-import dao.PersonalDAO;
 import dao.AlojamientoDAO;
 import dao.RolDAO;
-import dao.UsuarioDAO;
 import model.Personal;
 import model.Rol;
-import model.UsuarioSistema;
+import service.RegistroPersonalService;
 
 public class RegistroPersonalController {
 
@@ -111,8 +109,6 @@ public class RegistroPersonalController {
         }
 
         try {
-            PersonalDAO personalDAO = new PersonalDAO();
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
             RolDAO rolDAO = new RolDAO();
 
             // Asignar rol Recepcionista por defecto para personal del sistema
@@ -131,17 +127,12 @@ public class RegistroPersonalController {
             }
             Long idRol = rolRecep.getIdRol();
 
-            Long idPersonalGenerado = personalDAO.registrarPersonal(personal);
-
-            UsuarioSistema nuevoUsuario = new UsuarioSistema(
-                    null,
-                    fldUser.getText().trim(),
-                    null,
-                    "ACTIVO",
+            Long idPersonalGenerado = new RegistroPersonalService().registrar(
+                    personal,
                     idRol,
-                    idPersonalGenerado
+                    fldUser.getText().trim(),
+                    fldContrasena.getText().trim()
             );
-            usuarioDAO.registrarUsuario(nuevoUsuario, fldContrasena.getText().trim());
 
             mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
                     "El colaborador " + personal.getNombre() + " fue registrado exitosamente con usuario: "

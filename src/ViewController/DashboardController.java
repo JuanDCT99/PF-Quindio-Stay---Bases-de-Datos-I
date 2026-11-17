@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import dao.HabitacionDAO;
+import dao.HuespedDAO;
+import dao.PlanDAO;
 import dao.ReservaDAO;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -24,12 +27,18 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.Habitacion;
+import model.Huesped;
+import model.Plan;
 import model.Reserva;
 import utils.SesionUsuario;
 
 public class DashboardController {
 
     private final ReservaDAO reservaDAO = new ReservaDAO();
+    private final HuespedDAO huespedDAO = new HuespedDAO();
+    private final HabitacionDAO habitacionDAO = new HabitacionDAO();
+    private final PlanDAO planDAO = new PlanDAO();
 
     @FXML
     private TableView<Reserva> tablaReservas;
@@ -94,6 +103,25 @@ public class DashboardController {
             int noches = Integer.parseInt(resNoches.get().trim());
             if (noches <= 0) noches = 1;
 
+            Long idPlan = 1L;
+            Huesped titular = huespedDAO.buscarPorId(idTitular);
+            if (titular == null) {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Huésped no encontrado",
+                        "No existe un huésped con ID " + idTitular + ".");
+                return;
+            }
+            Habitacion habitacion = habitacionDAO.buscarPorId(idHabitacion);
+            if (habitacion == null) {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Habitación no encontrada",
+                        "No existe una habitación con ID " + idHabitacion + ".");
+                return;
+            }
+            if (planDAO.buscarPorId(idPlan) == null) {
+                mostrarAlerta(event, Alert.AlertType.WARNING, "Plan no encontrado",
+                        "No existe el plan con ID " + idPlan + ". Revise los datos iniciales de la base de datos.");
+                return;
+            }
+
             LocalDate entrada = LocalDate.now().plusDays(1);
             LocalDate salida = entrada.plusDays(noches);
             BigDecimal precioNoche = new BigDecimal("250000.00");
@@ -102,7 +130,7 @@ public class DashboardController {
             nuevaReserva.setEstado("CONFIRMADA");
             nuevaReserva.setFechaCreacion(LocalDateTime.now());
             nuevaReserva.setCanalDirecto("S");
-            nuevaReserva.setIdPlan(1L);
+            nuevaReserva.setIdPlan(idPlan);
             nuevaReserva.setIdTitular(idTitular);
 
             Long idGenerado = reservaDAO.crearReservaCompleta(nuevaReserva, idHabitacion, entrada, salida, precioNoche);

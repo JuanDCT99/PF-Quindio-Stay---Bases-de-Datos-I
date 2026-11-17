@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import dao.ReservaDAO;
 import dao.SancionDAO;
+import dao.ServicioDAO;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,11 +27,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.Reserva;
 import model.Sancion;
+import model.Servicio;
 
 public class SanciónController {
 
     private final SancionDAO sancionDAO = new SancionDAO();
+    private final ReservaDAO reservaDAO = new ReservaDAO();
+    private final ServicioDAO servicioDAO = new ServicioDAO();
 
     @FXML
     private TableView<Sancion> tablaSanciones;
@@ -68,6 +74,50 @@ public class SanciónController {
         }
     }
 
+    private Optional<Long> seleccionarReserva(ActionEvent event, Long actual) throws SQLException {
+        List<Reserva> reservas = reservaDAO.listarTodas();
+        if (reservas.isEmpty()) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Sin reservas",
+                    "No hay reservas registradas. Cree una reserva antes de registrar una sanción.");
+            return Optional.empty();
+        }
+
+        List<String> opciones = new ArrayList<>();
+        String inicial = null;
+        for (Reserva reserva : reservas) {
+            String texto = reserva.getIdReserva() + " - " + reserva.getEstado();
+            opciones.add(texto);
+            if (reserva.getIdReserva().equals(actual)) {
+                inicial = texto;
+            }
+        }
+        if (inicial == null) {
+            inicial = opciones.get(0);
+        }
+
+        ChoiceDialog<String> dialogo = new ChoiceDialog<>(inicial, opciones);
+        dialogo.setTitle("Sanción | QuindíoStay");
+        dialogo.setHeaderText("Reserva a sancionar");
+        dialogo.setContentText("Seleccione una reserva existente:");
+        Optional<String> seleccion = dialogo.showAndWait();
+        if (seleccion.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(Long.valueOf(seleccion.get().substring(0, seleccion.get().indexOf(" - ")).trim()));
+    }
+
+    private boolean servicioValido(ActionEvent event, Long idServicio) throws SQLException {
+        if (idServicio == null) {
+            return true;
+        }
+        if (servicioDAO.buscarPorId(idServicio) != null) {
+            return true;
+        }
+        mostrarAlerta(event, Alert.AlertType.WARNING, "Servicio no encontrado",
+                "No existe un servicio con ID " + idServicio + ". Déjelo vacío o elija un ID válido.");
+        return false;
+    }
+
     private void mostrarAlerta(ActionEvent event, Alert.AlertType tipo, String titulo, String mensaje) {
         Alert alerta = new Alert(tipo);
         if (event != null && event.getSource() instanceof Node) {
@@ -81,11 +131,13 @@ public class SanciónController {
 
     @FXML
     private void crearSancion(ActionEvent event) {
-        TextInputDialog dlgReserva = new TextInputDialog("1001");
-        dlgReserva.setTitle("Nueva Sanción | QuindíoStay");
-        dlgReserva.setHeaderText("Registro de Sanción");
-        dlgReserva.setContentText("ID de la Reserva:");
-        Optional<String> idReserva = dlgReserva.showAndWait();
+        Optional<Long> idReserva;
+        try {
+            idReserva = seleccionarReserva(event, null);
+        } catch (SQLException e) {
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
+            return;
+        }
         if (idReserva.isEmpty()) return;
 
         List<String> tipos = new ArrayList<>(List.of("DANOS", "MORA", "CANCELACION", "NO_SHOW"));
@@ -125,13 +177,16 @@ public class SanciónController {
             }
             String textoServicio = idServicio.get().trim();
             Long servicio = textoServicio.isEmpty() ? null : Long.valueOf(textoServicio);
+            if (!servicioValido(event, servicio)) {
+                return;
+            }
 
             Sancion sancion = new Sancion();
             sancion.setTipoSancion(tipo.get());
             sancion.setDescripcion(descripcion.get().trim());
             sancion.setFechaSancion(LocalDateTime.now());
             sancion.setValor(monto);
-            sancion.setIdReserva(Long.valueOf(idReserva.get().trim()));
+            sancion.setIdReserva(idReserva.get());
             sancion.setIdServicio(servicio);
 
             Long idGenerado = sancionDAO.registrarSancion(sancion);
@@ -140,7 +195,9 @@ public class SanciónController {
                     "Sanción #" + idGenerado + " registrada para la reserva #" + sancion.getIdReserva() + ".");
         } catch (NumberFormatException e) {
             mostrarAlerta(event, Alert.AlertType.WARNING, "Dato inválido",
-                    "Ingrese números válidos para el ID de reserva, el valor y el ID de servicio.");
+                    "Ingrese números válidos para el valor y el ID de servicio.");
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Datos inválidos", e.getMessage());
         } catch (SQLException e) {
             mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
         }
@@ -205,10 +262,14 @@ public class SanciónController {
                 return;
             }
             String textoServicio = idServicio.get().trim();
+            Long servicio = textoServicio.isEmpty() ? null : Long.valueOf(textoServicio);
+            if (!servicioValido(event, servicio)) {
+                return;
+            }
             sancion.setTipoSancion(tipo.get());
             sancion.setDescripcion(descripcion.get().trim());
             sancion.setValor(monto);
-            sancion.setIdServicio(textoServicio.isEmpty() ? null : Long.valueOf(textoServicio));
+            sancion.setIdServicio(servicio);
 
             if (sancionDAO.actualizarSancion(sancion)) {
                 recargarTabla();
@@ -220,6 +281,8 @@ public class SanciónController {
         } catch (NumberFormatException e) {
             mostrarAlerta(event, Alert.AlertType.WARNING, "Dato inválido",
                     "Ingrese números válidos para el ID, el valor y el ID de servicio.");
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Datos inválidos", e.getMessage());
         } catch (SQLException e) {
             mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
         }
@@ -256,6 +319,8 @@ public class SanciónController {
             }
         } catch (NumberFormatException e) {
             mostrarAlerta(event, Alert.AlertType.WARNING, "Dato inválido", "El ID debe ser numérico.");
+        } catch (IllegalArgumentException e) {
+            mostrarAlerta(event, Alert.AlertType.WARNING, "Datos inválidos", e.getMessage());
         } catch (SQLException e) {
             mostrarAlerta(event, Alert.AlertType.ERROR, "Error de base de datos", e.getMessage());
         }

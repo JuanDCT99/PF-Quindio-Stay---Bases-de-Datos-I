@@ -12,6 +12,7 @@ import java.util.List;
 import model.Servicio;
 import model.UsoServicio;
 import utils.ConexionBD;
+import utils.ValidacionesBD;
 
 /**
  * Data Access Object (DAO) para las entidades Servicio y Uso_Servicio.
@@ -76,6 +77,9 @@ public class ServicioDAO {
 
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+            ValidacionesBD.validarReservaHabitacion(conn, uso.getIdReservaHabitacion());
+            ValidacionesBD.validarServicio(conn, uso.getIdServicio());
+            ValidacionesBD.validarPersonal(conn, uso.getIdPersonal());
             ps.setLong(1, uso.getIdUsoServicio());
             ps.setTimestamp(2, Timestamp.valueOf(uso.getFechaHoraInicio()));
             ps.setTimestamp(3, Timestamp.valueOf(uso.getFechaHoraFin()));

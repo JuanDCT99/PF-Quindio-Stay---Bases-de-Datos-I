@@ -12,18 +12,21 @@ SELECT
     tm.anio                      AS anio,
     tm.nombre_temporada          AS temporada,
     t.nombre_tipo                AS tipo_habitacion,
-    COUNT(rh.id_reserva_habitacion) AS noches_vendidas,
-    SUM(tar.precio_noche)        AS ingreso_abstracto
+    SUM(rh.fecha_salida_reservada - rh.fecha_entrada_reservada + rh.noches_adicionales) AS noches_vendidas,
+    SUM(tar.precio_noche * (rh.fecha_salida_reservada - rh.fecha_entrada_reservada + rh.noches_adicionales)) AS ingreso_total
 FROM Reserva_Habitacion rh
 JOIN Reserva r
   ON rh.id_reserva = r.id_reserva
+JOIN Habitacion h
+  ON rh.id_habitacion = h.id_habitacion
 JOIN Tipo_Habitacion t
-  ON rh.id_habitacion = t.id_tipo_habitacion
+  ON h.id_tipo_habitacion = t.id_tipo_habitacion
 JOIN Tarifa tar
-  ON rh.id_habitacion = tar.id_tipo_habitacion
+  ON tar.id_tipo_habitacion = t.id_tipo_habitacion
 JOIN Temporada tm
-  ON rh.id_habitacion = tm.id_temporada
+  ON tar.id_temporada = tm.id_temporada
 WHERE r.estado <> 'CANCELADA'
+  AND rh.fecha_entrada_reservada BETWEEN tm.fecha_inicio AND tm.fecha_fin
 GROUP BY
     tm.anio,
     tm.nombre_temporada,

@@ -18,7 +18,7 @@
                         <Image url="@Logo.png" />
                     </image>
                 </ImageView>
-                <Text fill="#fdfbd4" layoutX="136.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="QuindíoStay">
+                <Text fill="#fdfbd4" layoutX="136.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jucamer Stay">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
@@ -133,7 +133,7 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button fx:id="btnEliminar" layoutX="242.0" layoutY="84.0" mnemonicParsing="false" style="-fx-background-color: #722f37;" text="Eliminar" textFill="WHITE">
+                <Button fx:id="btnEliminar" layoutX="242.0" layoutY="84.0" mnemonicParsing="false" onAction="#eliminarReporte" style="-fx-background-color: #722f37;" text="Eliminar" textFill="WHITE">
                     <effect>
                         <Lighting diffuseConstant="1.84" specularConstant="0.33">
                             <bumpInput>

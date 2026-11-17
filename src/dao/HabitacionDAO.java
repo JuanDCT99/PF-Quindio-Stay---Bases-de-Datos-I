@@ -9,6 +9,7 @@ import java.util.List;
 
 import model.Habitacion;
 import utils.ConexionBD;
+import utils.ValidacionesBD;
 
 /**
  * Data Access Object (DAO) para la entidad Habitacion.
@@ -31,6 +32,8 @@ public class HabitacionDAO {
 
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+            ValidacionesBD.validarTipoHabitacion(conn, h.getIdTipoHabitacion());
+            ValidacionesBD.validarAlojamiento(conn, h.getIdAlojamiento());
             ps.setLong(1, h.getIdHabitacion());
             ps.setString(2, h.getNumeroHabitacion());
             ps.setInt(3, h.getCapacidadMaxima());
@@ -53,6 +56,8 @@ public class HabitacionDAO {
 
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+            ValidacionesBD.validarTipoHabitacion(conn, h.getIdTipoHabitacion());
+            ValidacionesBD.validarAlojamiento(conn, h.getIdAlojamiento());
             ps.setString(1, h.getNumeroHabitacion());
             ps.setInt(2, h.getCapacidadMaxima());
             ps.setString(3, h.getDescripcion());

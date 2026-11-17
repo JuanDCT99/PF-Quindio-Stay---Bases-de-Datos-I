@@ -13,6 +13,7 @@ import java.util.List;
 
 import model.Sancion;
 import utils.ConexionBD;
+import utils.ValidacionesBD;
 
 /**
  * Data Access Object (DAO) para la entidad Sancion.
@@ -45,6 +46,10 @@ public class SancionDAO {
 
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+            ValidacionesBD.validarReserva(conn, sancion.getIdReserva());
+            if (sancion.getIdServicio() != null) {
+                ValidacionesBD.validarServicio(conn, sancion.getIdServicio());
+            }
             ps.setLong(1, sancion.getIdSancion());
             ps.setString(2, sancion.getTipoSancion());
             ps.setString(3, sancion.getDescripcion());
@@ -88,6 +93,10 @@ public class SancionDAO {
                    + "valor = ?, id_reserva = ?, id_servicio = ? WHERE id_sancion = ?";
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+            ValidacionesBD.validarReserva(conn, sancion.getIdReserva());
+            if (sancion.getIdServicio() != null) {
+                ValidacionesBD.validarServicio(conn, sancion.getIdServicio());
+            }
             ps.setString(1, sancion.getTipoSancion());
             ps.setString(2, sancion.getDescripcion());
             ps.setTimestamp(3, Timestamp.valueOf(sancion.getFechaSancion() == null

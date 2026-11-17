@@ -16,6 +16,7 @@ import java.util.List;
 
 import model.Reserva;
 import utils.ConexionBD;
+import utils.ValidacionesBD;
 
 /**
  * Data Access Object (DAO) para la entidad Reserva.
@@ -67,6 +68,13 @@ public class ReservaDAO {
         try {
             conn = ConexionBD.getConexion();
             conn.setAutoCommit(false);
+
+            ValidacionesBD.validarPlan(conn, reserva.getIdPlan());
+            ValidacionesBD.validarHuesped(conn, reserva.getIdTitular());
+            ValidacionesBD.validarHabitacion(conn, idHabitacion);
+            if (reserva.getIdIntermediario() != null) {
+                ValidacionesBD.validarIntermediario(conn, reserva.getIdIntermediario());
+            }
 
             // 1. Insertar Reserva
             String sqlReserva = "INSERT INTO Reserva (id_reserva, estado, fecha_creacion, hora_estimada_llegada, fecha_limite_confirmacion, canal_directo, precio_total, id_plan, id_titular, id_intermediario) "

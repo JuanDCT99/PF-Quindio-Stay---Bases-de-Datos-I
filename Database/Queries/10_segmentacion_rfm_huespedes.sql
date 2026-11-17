@@ -8,9 +8,7 @@
 -- =====================================================================
 -- Reporte 10 - Segmentacion RFM y ranking de huespedes VIP
 -- =====================================================================
-WITH RECURSIVE
--- Recencia: ultima estancia de cada huésped
-RFM_Recencia AS (
+WITH RFM_Recencia AS (
     SELECT
         h.id_huesped,
         MAX(rh.fecha_entrada_reservada) AS fecha_ultima_estancia
@@ -21,29 +19,24 @@ RFM_Recencia AS (
         ON r.id_reserva = rh.id_reserva
     GROUP BY h.id_huesped
 ),
--- Frecuencia: cantidad de reservas por huésped
 RFM_Frecuencia AS (
     SELECT
         h.id_huesped,
-        COUNT(r.id_reserva) AS total_reservas
+        COUNT(DISTINCT r.id_reserva) AS total_reservas
     FROM Huesped h
     JOIN Reserva r
         ON h.id_huesped = r.id_titular
     GROUP BY h.id_huesped
 ),
--- Gasto: total pagado por huésped
 RFM_Gasto AS (
     SELECT
         h.id_huesped,
-        SUM(p.monto) AS total_gastado
+        SUM(r.precio_total) AS total_gastado
     FROM Huesped h
     JOIN Reserva r
         ON h.id_huesped = r.id_titular
-    JOIN Pago p
-        ON r.id_reserva = p.id_reserva
     GROUP BY h.id_huesped
 ),
--- Puntuacion promedio
 RFM_Puntuacion AS (
     SELECT
         h.id_huesped,
@@ -52,6 +45,24 @@ RFM_Puntuacion AS (
     JOIN Calificacion c
         ON h.id_huesped = c.id_huesped
     GROUP BY h.id_huesped
+),
+RFM_Scores AS (
+    SELECT
+        id_huesped,
+        NTILE(5) OVER (ORDER BY fecha_ultima_estancia DESC NULLS LAST) AS puntuacion_recencia,
+        NTILE(5) OVER (ORDER BY total_reservas DESC) AS puntuacion_frecuencia,
+        NTILE(5) OVER (ORDER BY total_gastado DESC) AS puntuacion_gasto
+    FROM (
+        SELECT
+            h.id_huesped,
+            rec.fecha_ultima_estancia,
+            COALESCE(fre.total_reservas, 0) AS total_reservas,
+            COALESCE(gas.total_gastado, 0) AS total_gastado
+        FROM Huesped h
+        LEFT JOIN RFM_Recencia rec ON h.id_huesped = rec.id_huesped
+        LEFT JOIN RFM_Frecuencia fre ON h.id_huesped = fre.id_huesped
+        LEFT JOIN RFM_Gasto gas ON h.id_huesped = gas.id_huesped
+    )
 )
 SELECT
     h.id_huesped,
@@ -59,28 +70,24 @@ SELECT
     h.documento,
     h.telefono,
     h.correo,
-    r.fecha_ultima_estancia,
-    f.total_reservas AS frecuencia,
-    g.total_gastado AS gasto_total,
-    p.puntuacion_promedio AS satisfaccion,
-    r.puntuacion_recencia,
-    r.puntuacion_frecuencia,
-    r.puntuacion_gasto,
+    rec.fecha_ultima_estancia,
+    COALESCE(fre.total_reservas, 0) AS frecuencia,
+    COALESCE(gas.total_gastado, 0) AS gasto_total,
+    pun.puntuacion_promedio AS satisfaccion,
+    sc.puntuacion_recencia,
+    sc.puntuacion_frecuencia,
+    sc.puntuacion_gasto,
     ROUND(
-        (r.puntuacion_recencia + r.puntuacion_frecuencia + r.puntuacion_gasto)
+        (sc.puntuacion_recencia + sc.puntuacion_frecuencia + sc.puntuacion_gasto)
         / 3.0, 2
     ) AS puntuacion_rf_total
 FROM Huesped h
-LEFT JOIN RFM_Recencia r
-    ON h.id_huesped = r.id_huesped
-LEFT JOIN RFM_Frecuencia f
-    ON h.id_huesped = f.id_huesped
-LEFT JOIN RFM_Gasto g
-    ON h.id_huesped = g.id_huesped
-LEFT JOIN RFM_Puntuacion p
-    ON h.id_huesped = p.id_huesped
-ORDER BY
-    puntuacion_rf_total DESC;
+LEFT JOIN RFM_Recencia rec ON h.id_huesped = rec.id_huesped
+LEFT JOIN RFM_Frecuencia fre ON h.id_huesped = fre.id_huesped
+LEFT JOIN RFM_Gasto gas ON h.id_huesped = gas.id_huesped
+LEFT JOIN RFM_Puntuacion pun ON h.id_huesped = pun.id_huesped
+LEFT JOIN RFM_Scores sc ON h.id_huesped = sc.id_huesped
+ORDER BY puntuacion_rf_total DESC;
 
 -- =====================================================================
 -- FIN DEL REPORTE 10

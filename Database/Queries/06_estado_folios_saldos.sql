@@ -18,15 +18,20 @@ SELECT
     rh.fecha_entrada_reservada      AS entrada_reservada,
     rh.fecha_salida_reservada       AS salida_reservada,
     r.precio_total                  AS precio_total_reserva,
-    COALESCE((SELECT SUM(u.solicitud) FROM Uso_Servicio u WHERE u.id_reserva_habitacion = rh.id_reserva_habitacion), 0) AS consumo_servicios,
+    COALESCE(u.total_usos, 0)       AS consumo_servicios,
     COALESCE(s.total_sanciones, 0)  AS total_sanciones,
     COALESCE(p.total_pagado, 0)     AS total_pagado,
-    (COALESCE(r.precio_total, 0) + COALESCE(s.total_sanciones, 0) + COALESCE(p.total_pagado, 0)) AS saldo_pendiente
+    (COALESCE(r.precio_total, 0) + COALESCE(s.total_sanciones, 0) - COALESCE(p.total_pagado, 0)) AS saldo_pendiente
 FROM Reserva r
 JOIN Reserva_Habitacion rh
   ON r.id_reserva = rh.id_reserva
 JOIN Habitacion h
   ON rh.id_habitacion = h.id_habitacion
+LEFT JOIN (
+    SELECT id_reserva_habitacion, COUNT(*) AS total_usos
+    FROM Uso_Servicio
+    GROUP BY id_reserva_habitacion
+) u ON rh.id_reserva_habitacion = u.id_reserva_habitacion
 LEFT JOIN (
     SELECT id_reserva, SUM(valor) AS total_sanciones
     FROM Sancion
@@ -38,7 +43,7 @@ LEFT JOIN (
     GROUP BY id_reserva
 ) p ON r.id_reserva = p.id_reserva
 WHERE r.estado <> 'CANCELADA'
-HAVING (COALESCE(r.precio_total, 0) + COALESCE(s.total_sanciones, 0) - COALESCE(p.total_pagado, 0)) > 0
+  AND (COALESCE(r.precio_total, 0) + COALESCE(s.total_sanciones, 0) - COALESCE(p.total_pagado, 0)) > 0
 ORDER BY
     r.id_reserva,
     h.numero_habitacion;

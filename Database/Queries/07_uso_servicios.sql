@@ -21,7 +21,7 @@ SELECT
             ELSE 0
         END
     ) AS usos_registrados,
-    ROUND(AVG(u.fecha_hora_fin - u.fecha_hora_inicio), 2) AS tiempo_promedio_uso
+    ROUND(AVG((CAST(u.fecha_hora_fin AS DATE) - CAST(u.fecha_hora_inicio AS DATE)) * 1440), 2) AS tiempo_promedio_minutos
 FROM Servicio s
 JOIN Alojamiento a
   ON s.id_alojamiento = a.id_alojamiento

@@ -12,6 +12,7 @@ import java.util.List;
 
 import model.Pago;
 import utils.ConexionBD;
+import utils.ValidacionesBD;
 
 /**
  * Data Access Object (DAO) para la entidad Pago.
@@ -41,6 +42,7 @@ public class PagoDAO {
 
         try (Connection conn = ConexionBD.getConexion();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+            ValidacionesBD.validarReserva(conn, pago.getIdReserva());
             ps.setLong(1, pago.getIdPago());
             ps.setBigDecimal(2, pago.getMonto());
             ps.setString(3, pago.getMedioPago());

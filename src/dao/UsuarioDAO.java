@@ -9,6 +9,7 @@ import java.sql.Types;
 import model.UsuarioSistema;
 import utils.ConexionBD;
 import utils.SeguridadUtil;
+import utils.ValidacionesBD;
 
 /**
  * Data Access Object (DAO) para la entidad Usuario_Sistema.
@@ -127,6 +128,11 @@ public class UsuarioDAO {
 
         String sql = "INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal) "
                    + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        ValidacionesBD.validarRol(conn, usuario.getIdRol());
+        if (usuario.getIdPersonal() != null) {
+            ValidacionesBD.validarPersonal(conn, usuario.getIdPersonal());
+        }
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, usuario.getIdUsuario());
