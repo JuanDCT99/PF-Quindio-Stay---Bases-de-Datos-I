@@ -33,12 +33,17 @@ public class RolDAO {
     }
 
     public Rol buscarPorNombre(String nombreRol) throws SQLException {
+        try (Connection conn = ConexionBD.getConexion()) {
+            return buscarPorNombre(conn, nombreRol);
+        }
+    }
+
+    public Rol buscarPorNombre(Connection conn, String nombreRol) throws SQLException {
         if (nombreRol == null || nombreRol.isBlank()) {
             return null;
         }
         String sql = "SELECT id_rol, nombre_rol, descripcion FROM Rol WHERE UPPER(nombre_rol) = UPPER(?)";
-        try (Connection conn = ConexionBD.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, nombreRol.trim());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {

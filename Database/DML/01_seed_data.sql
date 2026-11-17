@@ -36,16 +36,16 @@ INSERT INTO Municipio (id_municipio, nombre_municipio, departamento) VALUES (10,
 -- 2. ALOJAMIENTO (algunos alojamientos del Quindío)
 -- =====================================================================
 INSERT INTO Alojamiento (id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas)
-VALUES (1, 'Finca La Esperanza', '8-80912345', 'Cra 2 #45-67, Armenia, Quindío', '+57 603 1234567', 'S', '14:00:00', 24);
+VALUES (1, 'Finca La Esperanza', '8-80912345', 'Cra 2 #45-67, Armenia, Quindío', '+57 603 1234567', 'S', TO_TIMESTAMP('14:00:00', 'HH24:MI:SS'), 24);
 
 INSERT INTO Alojamiento (id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas)
-VALUES (2, 'Glamping Andino', '9-12345678', 'Carrera 12 #50-30, Circasia, Quindío', '+57 603 2345678', 'N', '12:00:00', 48);
+VALUES (2, 'Glamping Andino', '9-12345678', 'Carrera 12 #50-30, Circasia, Quindío', '+57 603 2345678', 'N', TO_TIMESTAMP('12:00:00', 'HH24:MI:SS'), 48);
 
 INSERT INTO Alojamiento (id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas)
-VALUES (3, 'Hotel Boutique Quindío', '10-56789012', 'Calle 1 #20-10, Armenia, Quindío', '+57 603 3456789', 'S', '13:00:00', 24);
+VALUES (3, 'Hotel Boutique Quindío', '10-56789012', 'Calle 1 #20-10, Armenia, Quindío', '+57 603 3456789', 'S', TO_TIMESTAMP('13:00:00', 'HH24:MI:SS'), 24);
 
 INSERT INTO Alojamiento (id_alojamiento, nombre_alojamiento, nit, direccion, telefono, acepta_mascotas, hora_salida_limite, plazo_confirmacion_horas)
-VALUES (4, 'Cabañas del Río', '11-23456789', 'Vía Valle de Lourdes Km 2, Calarca, Quindío', '+57 603 4567890', 'S', '11:00:00', 72);
+VALUES (4, 'Cabañas del Río', '11-23456789', 'Vía Valle de Lourdes Km 2, Calarca, Quindío', '+57 603 4567890', 'S', TO_TIMESTAMP('11:00:00', 'HH24:MI:SS'), 72);
 
 -- =====================================================================
 -- 3. TIPO_HABITACION
@@ -102,19 +102,19 @@ INSERT INTO Habitacion (id_habitacion, numero_habitacion, capacidad_maxima, desc
 VALUES (10, '502', 2, 'Cabaña básica en la finca', 'DISPONIBLE', 5, 2);
 
 INSERT INTO Habitacion (id_habitacion, numero_habitacion, capacidad_maxima, descripcion, estado_operativo, id_tipo_habitacion, id_alojamiento)
-VALUES (11, '101', 6, 'Dormitorio compartido para grupos', 'DISPONIBLE', 6, 2);
+VALUES (11, '503', 6, 'Dormitorio compartido para grupos', 'DISPONIBLE', 6, 2);
 
 INSERT INTO Habitacion (id_habitacion, numero_habitacion, capacidad_maxima, descripcion, estado_operativo, id_tipo_habitacion, id_alojamiento)
-VALUES (12, '102', 6, 'Dormitorio compartido para grupos', 'DISPONIBLE', 6, 2);
+VALUES (12, '504', 6, 'Dormitorio compartido para grupos', 'DISPONIBLE', 6, 2);
 
 INSERT INTO Habitacion (id_habitacion, numero_habitacion, capacidad_maxima, descripcion, estado_operativo, id_tipo_habitacion, id_alojamiento)
 VALUES (13, '100', 2, 'Habitación estándar con vista al valle', 'DISPONIBLE', 1, 3);
 
 INSERT INTO Habitacion (id_habitacion, numero_habitacion, capacidad_maxima, descripcion, estado_operativo, id_tipo_habitacion, id_alojamiento)
-VALUES (14, '101', 2, 'Habitación estándar con vista al río', 'OCUPADA', 1, 4);
+VALUES (14, '401', 2, 'Habitación estándar con vista al río', 'OCUPADA', 1, 4);
 
 INSERT INTO Habitacion (id_habitacion, numero_habitacion, capacidad_maxima, descripcion, estado_operativo, id_tipo_habitacion, id_alojamiento)
-VALUES (15, '102', 2, 'Habitación estándar con vista al río', 'PREPARACION', 1, 4);
+VALUES (15, '402', 2, 'Habitación estándar con vista al río', 'PREPARACION', 1, 4);
 
 -- =====================================================================
 -- 5. TEMPORADA
@@ -231,19 +231,9 @@ INSERT INTO Rol (id_rol, nombre_rol, descripcion)
 VALUES (3, 'HUESPED', 'Acceso al historial de reservas y calificaciones');
 
 -- =====================================================================
--- 11. USUARIO_SISTEMA
--- =====================================================================
-INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal)
-VALUES (1, 'admin_quindio', 'hash_admin_4df695db48563e6b8a908d6a9d9c4b6e', 'ACTIVO', 1, 1);
-
-INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal)
-VALUES (2, 'recepcion_quindio', 'hash_recepcion_a1b2c3d4e5f6', 'ACTIVO', 2, 2);
-
-INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal)
-VALUES (3, 'huésped_juanda', 'hash_huesped_78901234567890', 'ACTIVO', 3, NULL);
-
--- =====================================================================
--- 12. PERSONAL
+-- 11. PERSONAL
+-- (Debe insertarse antes de Usuario_Sistema porque Usuario_Sistema.id_personal
+--  es una FK a Personal.id_personal.)
 -- =====================================================================
 INSERT INTO Personal (id_personal, nombre, funcion, cargo, salario, horario_trabajo, id_alojamiento)
 VALUES (1, 'Ana López Restrepo', 'Recepcionista principal', 'RECEPCIONISTA', 800000, 'Lunes a Viernes 08:00-16:00', 1);
@@ -264,28 +254,40 @@ INSERT INTO Personal (id_personal, nombre, funcion, cargo, salario, horario_trab
 VALUES (6, 'Ricardo Díaz Villalobos', 'Mozo', 'MOSO', 600000, 'Lunes a Viernes 10:00-18:00', 3);
 
 -- =====================================================================
+-- 12. USUARIO_SISTEMA
+-- =====================================================================
+INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal)
+VALUES (1, 'admin_quindio', 'hash_admin_4df695db48563e6b8a908d6a9d9c4b6e', 'ACTIVO', 1, 1);
+
+INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal)
+VALUES (2, 'recepcion_quindio', 'hash_recepcion_a1b2c3d4e5f6', 'ACTIVO', 2, 2);
+
+INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal)
+VALUES (3, 'huésped_juanda', 'hash_huesped_78901234567890', 'ACTIVO', 3, NULL);
+
+-- =====================================================================
 -- 13. SERVICIO
 -- =====================================================================
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (1, 'Piscina', 'PISCINA', '08:00:00', '20:00:00', 'N', 1);
+VALUES (1, 'Piscina', 'PISCINA', TO_TIMESTAMP('08:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('20:00:00', 'HH24:MI:SS'), 'N', 1);
 
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (2, 'Spa', 'SPA', '09:00:00', '21:00:00', 'S', 1);
+VALUES (2, 'Spa', 'SPA', TO_TIMESTAMP('09:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('21:00:00', 'HH24:MI:SS'), 'S', 1);
 
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (3, 'Jacuzzi', 'JACUZZI', '10:00:00', '22:00:00', 'S', 1);
+VALUES (3, 'Jacuzzi', 'JACUZZI', TO_TIMESTAMP('10:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('22:00:00', 'HH24:MI:SS'), 'S', 1);
 
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (4, 'Salón de eventos', 'CENTRO_EVENTOS', '08:00:00', '23:00:00', 'N', 1);
+VALUES (4, 'Salón de eventos', 'CENTRO_EVENTOS', TO_TIMESTAMP('08:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('23:00:00', 'HH24:MI:SS'), 'N', 1);
 
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (5, 'Cancha de croquetas', 'CANCHA', '09:00:00', '18:00:00', 'N', 2);
+VALUES (5, 'Cancha de croquetas', 'CANCHA', TO_TIMESTAMP('09:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('18:00:00', 'HH24:MI:SS'), 'N', 2);
 
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (6, 'Servicios a la habitación', 'SERVICIO_HABITACION', '08:00:00', '21:00:00', 'N', 1);
+VALUES (6, 'Servicios a la habitación', 'SERVICIO_HABITACION', TO_TIMESTAMP('08:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('21:00:00', 'HH24:MI:SS'), 'N', 1);
 
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (7, 'Minibar', 'PISCINA', '00:00:00', '23:59:59', 'N', 3);
+VALUES (7, 'Minibar', 'PISCINA', TO_TIMESTAMP('00:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('23:59:59', 'HH24:MI:SS'), 'N', 3);
 
 -- =====================================================================
 -- 14. USUARIO_SISTEMA (continuación, para alojamiento 2 y 3)
@@ -374,22 +376,22 @@ VALUES (5, 5, 'TITULAR');
 -- 18. FOLIO
 -- =====================================================================
 INSERT INTO Folio (id_reserva, fecha_apertura, fecha_cierre, estado)
-VALUES (1001, CURRENT_TIMESTAMP, NULL, 'ABIERTO');
+VALUES (1001, TO_TIMESTAMP('2025-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'ABIERTO');
 
 INSERT INTO Folio (id_reserva, fecha_apertura, fecha_cierre, estado)
-VALUES (1002, CURRENT_TIMESTAMP, TO_TIMESTAMP('2026-02-13 13:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'ABIERTO');
+VALUES (1002, TO_TIMESTAMP('2025-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-02-13 13:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'ABIERTO');
 
 INSERT INTO Folio (id_reserva, fecha_apertura, fecha_cierre, estado)
-VALUES (1003, CURRENT_TIMESTAMP, TO_TIMESTAMP('2026-02-12 22:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'CERRADO');
+VALUES (1003, TO_TIMESTAMP('2025-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-02-12 22:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'CERRADO');
 
 INSERT INTO Folio (id_reserva, fecha_apertura, fecha_cierre, estado)
-VALUES (1004, CURRENT_TIMESTAMP, NULL, 'ABIERTO');
+VALUES (1004, TO_TIMESTAMP('2025-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'ABIERTO');
 
 INSERT INTO Folio (id_reserva, fecha_apertura, fecha_cierre, estado)
-VALUES (1005, CURRENT_TIMESTAMP, NULL, 'ABIERTO');
+VALUES (1005, TO_TIMESTAMP('2025-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'ABIERTO');
 
 INSERT INTO Folio (id_reserva, fecha_apertura, fecha_cierre, estado)
-VALUES (1006, CURRENT_TIMESTAMP, NULL, 'ABIERTO');
+VALUES (1006, TO_TIMESTAMP('2025-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), NULL, 'ABIERTO');
 
 -- =====================================================================
 -- 19. PAGO
@@ -428,10 +430,10 @@ VALUES (9, 'Lucía Ramírez Aliaga', 'Recepcionista', 'RECEPCIONISTA', 710000, '
 -- 21. SERVICIO (sección 21 - Uso Servicio)
 -- =====================================================================
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (8, 'Baño de vapor', 'SAUNA', '08:00:00', '21:00:00', 'S', 1);
+VALUES (8, 'Baño de vapor', 'SAUNA', TO_TIMESTAMP('08:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('21:00:00', 'HH24:MI:SS'), 'S', 1);
 
 INSERT INTO Servicio (id_servicio, nombre_servicio, tipo_servicio, hora_apertura, hora_cierre, uso_exclusivo, id_alojamiento)
-VALUES (9, 'Waiter service', 'SERVICIO_HABITACION', '00:00:00', '23:59:59', 'N', 3);
+VALUES (9, 'Waiter service', 'SERVICIO_HABITACION', TO_TIMESTAMP('00:00:00', 'HH24:MI:SS'), TO_TIMESTAMP('23:59:59', 'HH24:MI:SS'), 'N', 3);
 
 -- =====================================================================
 -- 22. USO_SERVICIO
@@ -500,7 +502,7 @@ VALUES (4, 'NO_SHOW', 'La reserva no ha sido confirmada hasta la fecha de entrad
 -- 27. CALIFICACION (sección 27 - cont.)
 -- =====================================================================
 INSERT INTO Calificacion (id_calificacion, puntuacion, comentario, fecha_calificacion, id_huesped, id_reserva)
-VALUES (5, 4, 'Buena estancia, el pago fue sencillo', NULL, 4, 1005);
+VALUES (5, 4, 'Buena estancia, el pago fue sencillo', CURRENT_TIMESTAMP, 4, 1005);
 
 -- =====================================================================
 -- 28. REPORTE

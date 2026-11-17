@@ -13,7 +13,7 @@ import java.util.Properties;
  */
 public class ConexionBD {
 
-    private static String url = "jdbc:oracle:thin:@localhost:1521/FREEPDB1";
+    private static String url = "jdbc:oracle:thin:@localhost:1521/XEPDB1";
     private static String usuario = "QUINDIOSTAY";
     private static String contrasena = "Quindio123";
 

@@ -17,12 +17,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.sql.SQLException;
-import dao.HuespedDAO;
-import dao.RolDAO;
-import dao.UsuarioDAO;
+
 import model.Huesped;
-import model.Rol;
-import model.UsuarioSistema;
+import service.RegistroHuespedService;
 
 public class RegistroHuespedController {
 
@@ -134,32 +131,34 @@ public class RegistroHuespedController {
         }
 
         try {
-            HuespedDAO huespedDAO = new HuespedDAO();
-            UsuarioDAO usuarioDAO = new UsuarioDAO();
-            RolDAO rolDAO = new RolDAO();
-
-            Long idHuespedGenerado = huespedDAO.registrarHuesped(huesped);
-
-            Rol rolHuesped = rolDAO.buscarPorNombre("HUESPED");
-            Long idRol = (rolHuesped != null && rolHuesped.getIdRol() != null) ? rolHuesped.getIdRol() : 3L;
-
-            UsuarioSistema nuevoUsuario = new UsuarioSistema(
-                    null,
-                    fldUser.getText().trim(),
-                    null,
-                    "ACTIVO",
-                    idRol,
-                    null
-            );
-            usuarioDAO.registrarUsuario(nuevoUsuario, fldContrasena.getText().trim());
+            RegistroHuespedService registroService = new RegistroHuespedService();
+            registroService.registrar(huesped, fldUser.getText().trim(), fldContrasena.getText().trim());
 
             mostrarAlerta(event, Alert.AlertType.INFORMATION, "Registro exitoso",
                     "El huésped " + huesped.getNombre() + " fue registrado exitosamente con usuario: "
                     + fldUser.getText().trim() + ".\nYa puede iniciar sesión.");
             volverAlInicioSesion(event);
         } catch (SQLException e) {
-            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de registro",
-                    "No se pudo guardar el huésped en Oracle XE: " + e.getMessage());
+            mostrarAlerta(event, Alert.AlertType.ERROR, "Error de registro", mensajeError(e));
+        }
+    }
+
+    private String mensajeError(SQLException e) {
+        switch (e.getErrorCode()) {
+            case 1:
+                return "El documento del huésped o el nombre de usuario ya están registrados. "
+                        + "Verifique los datos e intente de nuevo.";
+            case 942:
+                return "La base de datos no tiene las tablas del proyecto. "
+                        + "Ejecute primero los scripts DDL y DML sobre el esquema QUINDIOSTAY.";
+            case 1017:
+                return "Credenciales inválidas para Oracle. Revise db.user y db.password en db.properties.";
+            case 12541:
+            case 17002:
+                return "No se pudo conectar con Oracle en localhost:1521. "
+                        + "Verifique que el contenedor/servicio Oracle esté iniciado y que el listener escuche en el puerto 1521.";
+            default:
+                return "No se pudo guardar el huésped en Oracle: " + e.getMessage();
         }
     }
 

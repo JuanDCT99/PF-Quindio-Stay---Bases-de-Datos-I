@@ -17,21 +17,30 @@ import utils.ConexionBD;
 public class HuespedDAO {
 
     public Long registrarHuesped(Huesped huesped) throws SQLException {
+        try (Connection conn = ConexionBD.getConexion()) {
+            return registrarHuesped(conn, huesped);
+        }
+    }
+
+    /**
+     * Inserta el huésped reutilizando una conexión existente, de modo que
+     * pueda participar en una transacción junto con otros DAO.
+     */
+    public Long registrarHuesped(Connection conn, Huesped huesped) throws SQLException {
         if (huesped == null) {
             throw new IllegalArgumentException("Huésped no puede ser nulo.");
         }
 
         Long id = huesped.getIdHuesped();
         if (id == null) {
-            id = obtenerSiguienteId();
+            id = obtenerSiguienteId(conn);
             huesped.setIdHuesped(id);
         }
 
         String sql = "INSERT INTO Huesped (id_huesped, nombre, documento, fecha_nacimiento, direccion, correo, telefono) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConexionBD.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, huesped.getIdHuesped());
             ps.setString(2, huesped.getNombre());
             ps.setString(3, huesped.getDocumento());
@@ -95,9 +104,14 @@ public class HuespedDAO {
     }
 
     public Long obtenerSiguienteId() throws SQLException {
+        try (Connection conn = ConexionBD.getConexion()) {
+            return obtenerSiguienteId(conn);
+        }
+    }
+
+    public Long obtenerSiguienteId(Connection conn) throws SQLException {
         String sql = "SELECT NVL(MAX(id_huesped), 0) + 1 AS siguiente_id FROM Huesped";
-        try (Connection conn = ConexionBD.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getLong("siguiente_id");

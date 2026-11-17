@@ -98,6 +98,16 @@ public class UsuarioDAO {
      * @throws SQLException si ocurre un error o el usuario ya existe.
      */
     public Long registrarUsuario(UsuarioSistema usuario, String contrasenaPlana) throws SQLException {
+        try (Connection conn = ConexionBD.getConexion()) {
+            return registrarUsuario(conn, usuario, contrasenaPlana);
+        }
+    }
+
+    /**
+     * Inserta el usuario reutilizando una conexión existente, de modo que
+     * pueda participar en una transacción junto con otros DAO.
+     */
+    public Long registrarUsuario(Connection conn, UsuarioSistema usuario, String contrasenaPlana) throws SQLException {
         if (usuario == null || contrasenaPlana == null || contrasenaPlana.isBlank()) {
             throw new IllegalArgumentException("El usuario y la contraseña no pueden estar vacíos.");
         }
@@ -105,7 +115,7 @@ public class UsuarioDAO {
         // Obtener siguiente ID disponible si no viene especificado
         Long id = usuario.getIdUsuario();
         if (id == null) {
-            id = obtenerSiguienteId();
+            id = obtenerSiguienteId(conn);
             usuario.setIdUsuario(id);
         }
 
@@ -118,8 +128,7 @@ public class UsuarioDAO {
         String sql = "INSERT INTO Usuario_Sistema (id_usuario, nombre_usuario, contrasena_hash, estado, id_rol, id_personal) "
                    + "VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = ConexionBD.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, usuario.getIdUsuario());
             ps.setString(2, usuario.getNombreUsuario().trim());
             ps.setString(3, usuario.getContrasenaHash());
@@ -159,9 +168,14 @@ public class UsuarioDAO {
     }
 
     public Long obtenerSiguienteId() throws SQLException {
+        try (Connection conn = ConexionBD.getConexion()) {
+            return obtenerSiguienteId(conn);
+        }
+    }
+
+    public Long obtenerSiguienteId(Connection conn) throws SQLException {
         String sql = "SELECT NVL(MAX(id_usuario), 0) + 1 AS siguiente_id FROM Usuario_Sistema";
-        try (Connection conn = ConexionBD.getConexion();
-             PreparedStatement ps = conn.prepareStatement(sql);
+        try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 return rs.getLong("siguiente_id");
