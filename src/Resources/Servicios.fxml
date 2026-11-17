@@ -177,44 +177,16 @@
             </font>
         </Text>
         <TextField layoutX="531.0" layoutY="204.0" prefHeight="39.0" prefWidth="112.0" />
-        <TabPane layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0" style="-fx-background-color: #A5A583;" tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="ID">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="NombreServicio">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="TipoServicio">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Hora Apertura">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Hora Cierre">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Uso Exlusivo">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="837.0" />
-                    </content>
-                </Tab>
-            <Tab text="idAlojamiento">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="837.0" />
-               </content>
-            </Tab>
-            </tabs>
-        </TabPane>
+        <TableView fx:id="tablaServicios" layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0">
+            <columns>
+                <TableColumn fx:id="colIdServicio" prefWidth="65.0" text="ID" />
+                <TableColumn fx:id="colNombreServicio" prefWidth="140.0" text="Servicio" />
+                <TableColumn fx:id="colTipoServicio" prefWidth="120.0" text="Tipo" />
+                <TableColumn fx:id="colHoraApertura" prefWidth="150.0" text="Hora Apertura" />
+                <TableColumn fx:id="colHoraCierre" prefWidth="150.0" text="Hora Cierre" />
+                <TableColumn fx:id="colUsoExclusivo" prefWidth="100.0" text="Uso Exclusivo" />
+                <TableColumn fx:id="colIdAlojamientoServicio" prefWidth="100.0" text="Alojamiento" />
+            </columns>
+        </TableView>
     </children>
 </AnchorPane>

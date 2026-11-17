@@ -1,5 +1,6 @@
 package ViewController;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,9 +8,15 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
+import model.Reporte;
 import service.ReportePDFService;
 import service.ReporteService;
 
@@ -24,6 +31,51 @@ public class ReportesController {
 
     private final ReporteService reporteService = new ReporteService();
     private int reporteSeleccionado = 1; // Por defecto, reporte 1
+
+    @FXML
+    private TableView<Reporte> tablaReportes;
+    @FXML
+    private TableColumn<Reporte, Number> colIdReporte;
+    @FXML
+    private TableColumn<Reporte, String> colNombreReporte;
+    @FXML
+    private TableColumn<Reporte, String> colNivel;
+    @FXML
+    private TableColumn<Reporte, String> colPreguntaNegocio;
+    @FXML
+    private ComboBox<Reporte> cbReporte;
+
+    @FXML
+    private void initialize() {
+        colIdReporte.setCellValueFactory(new PropertyValueFactory<>("idReporte"));
+        colNombreReporte.setCellValueFactory(new PropertyValueFactory<>("nombreReporte"));
+        colNivel.setCellValueFactory(new PropertyValueFactory<>("nivel"));
+        colPreguntaNegocio.setCellValueFactory(new PropertyValueFactory<>("preguntaNegocio"));
+
+        try {
+            List<Reporte> reportes = reporteService.listarReportes();
+            tablaReportes.setItems(FXCollections.observableArrayList(reportes));
+            cbReporte.setItems(FXCollections.observableArrayList(reportes));
+            cbReporte.setConverter(new StringConverter<Reporte>() {
+                @Override
+                public String toString(Reporte reporte) {
+                    return reporte == null ? ""
+                            : reporte.getIdReporte() + " - " + reporte.getNombreReporte();
+                }
+
+                @Override
+                public Reporte fromString(String texto) {
+                    return null;
+                }
+            });
+            if (!reportes.isEmpty()) {
+                cbReporte.getSelectionModel().selectFirst();
+                reporteSeleccionado = reportes.get(0).getIdReporte().intValue();
+            }
+        } catch (SQLException e) {
+            mostrarAlerta(null, Alert.AlertType.ERROR, "No se pudieron cargar los reportes", e.getMessage());
+        }
+    }
 
     @FXML
     private void irAHabitacion(ActionEvent event) {
@@ -115,9 +167,10 @@ public class ReportesController {
      */
     @FXML
     private void seleccionarReporte(ActionEvent event) {
-        // Este metodo se llamara desde el FXML cuando se seleccione el reporte
-        // Por ahora, solo indica que se quiere generar el reporte seleccionado
-        // La logica de seleccion se puede mejorar con un ComboBox o lista
+        Reporte seleccionado = cbReporte.getValue();
+        if (seleccionado != null && seleccionado.getIdReporte() != null) {
+            reporteSeleccionado = seleccionado.getIdReporte().intValue();
+        }
     }
 
     private void navegar(ActionEvent event, String ruta, String titulo) {

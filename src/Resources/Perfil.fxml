@@ -177,44 +177,16 @@
             </font>
         </Text>
         <TextField layoutX="531.0" layoutY="204.0" prefHeight="39.0" prefWidth="112.0" />
-        <TabPane layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0" style="-fx-background-color: #A5A583;" tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="ID">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Nombre">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Dpcumento">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="FechaNacimiento">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Direccion">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Correo">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="837.0" />
-                    </content>
-                </Tab>
-            <Tab text="Telefono">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="837.0" />
-               </content>
-            </Tab>
-            </tabs>
-        </TabPane>
+        <TableView fx:id="tablaPerfil" layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0">
+            <columns>
+                <TableColumn fx:id="colIdHuesped" prefWidth="60.0" text="ID" />
+                <TableColumn fx:id="colNombreHuesped" prefWidth="110.0" text="Nombre" />
+                <TableColumn fx:id="colDocumento" prefWidth="120.0" text="Documento" />
+                <TableColumn fx:id="colFechaNacimiento" prefWidth="120.0" text="Fecha Nacimiento" />
+                <TableColumn fx:id="colDireccion" prefWidth="160.0" text="Dirección" />
+                <TableColumn fx:id="colCorreo" prefWidth="160.0" text="Correo" />
+                <TableColumn fx:id="colTelefono" prefWidth="100.0" text="Teléfono" />
+            </columns>
+        </TableView>
     </children>
 </AnchorPane>

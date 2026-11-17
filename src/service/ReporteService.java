@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import dao.HabitacionDAO;
+import model.Reporte;
 import utils.ConexionBD;
 
 /** Servicio de reportes.
@@ -19,6 +20,26 @@ import utils.ConexionBD;
 public class ReporteService {
 
     private final HabitacionDAO habitacionDAO = new HabitacionDAO();
+
+    /** Devuelve el catálogo de reportes disponible en la base de datos. */
+    public List<Reporte> listarReportes() throws SQLException {
+        List<Reporte> lista = new ArrayList<>();
+        String sql = "SELECT id_reporte, nombre_reporte, nivel, pregunta_negocio "
+                   + "FROM Reporte ORDER BY id_reporte";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Reporte reporte = new Reporte();
+                reporte.setIdReporte(rs.getLong("id_reporte"));
+                reporte.setNombreReporte(rs.getString("nombre_reporte"));
+                reporte.setNivel(rs.getString("nivel"));
+                reporte.setPreguntaNegocio(rs.getString("pregunta_negocio"));
+                lista.add(reporte);
+            }
+        }
+        return lista;
+    }
 
     /** Ejecuta un reporte y devuelve los resultados.
      * Cada fila se convierte en un Map<String,Object> usando

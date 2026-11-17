@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import dao.ReservaDAO;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Reserva;
 import utils.SesionUsuario;
@@ -28,8 +32,37 @@ public class DashboardController {
     private final ReservaDAO reservaDAO = new ReservaDAO();
 
     @FXML
+    private TableView<Reserva> tablaReservas;
+    @FXML
+    private TableColumn<Reserva, Number> colIdReserva;
+    @FXML
+    private TableColumn<Reserva, LocalDateTime> colFechaCreacion;
+    @FXML
+    private TableColumn<Reserva, Number> colPrecioTotal;
+    @FXML
+    private TableColumn<Reserva, String> colCanalDirecto;
+    @FXML
+    private TableColumn<Reserva, LocalDateTime> colHoraEstimadaLlegada;
+    @FXML
+    private TableColumn<Reserva, String> colEstado;
+
+    @FXML
     private void initialize() {
-        // Inicialización de la pantalla de reservas
+        colIdReserva.setCellValueFactory(new PropertyValueFactory<>("idReserva"));
+        colFechaCreacion.setCellValueFactory(new PropertyValueFactory<>("fechaCreacion"));
+        colPrecioTotal.setCellValueFactory(new PropertyValueFactory<>("precioTotal"));
+        colCanalDirecto.setCellValueFactory(new PropertyValueFactory<>("canalDirecto"));
+        colHoraEstimadaLlegada.setCellValueFactory(new PropertyValueFactory<>("horaEstimadaLlegada"));
+        colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        recargarTabla();
+    }
+
+    private void recargarTabla() {
+        try {
+            tablaReservas.setItems(FXCollections.observableArrayList(reservaDAO.listarTodas()));
+        } catch (SQLException e) {
+            mostrarAlerta(null, Alert.AlertType.ERROR, "No se pudieron cargar las reservas", e.getMessage());
+        }
     }
 
     @FXML
@@ -73,6 +106,7 @@ public class DashboardController {
             nuevaReserva.setIdTitular(idTitular);
 
             Long idGenerado = reservaDAO.crearReservaCompleta(nuevaReserva, idHabitacion, entrada, salida, precioNoche);
+            recargarTabla();
 
             mostrarAlerta(event, Alert.AlertType.INFORMATION, "Reserva Creada con Éxito",
                     "Reserva #" + idGenerado + " registrada exitosamente en Oracle XE.\n"
@@ -116,6 +150,7 @@ public class DashboardController {
             if ("Check-In".equals(operacion.get())) {
                 boolean ok = reservaDAO.registrarCheckIn(idReserva);
                 if (ok) {
+                    recargarTabla();
                     mostrarAlerta(event, Alert.AlertType.INFORMATION, "Check-In Exitoso",
                             "Check-in completado para la reserva #" + idReserva + ".\nHabitación marcada como OCUPADA.");
                 } else {
@@ -124,6 +159,7 @@ public class DashboardController {
             } else {
                 boolean ok = reservaDAO.registrarCheckOut(idReserva);
                 if (ok) {
+                    recargarTabla();
                     mostrarAlerta(event, Alert.AlertType.INFORMATION, "Check-Out Exitoso",
                             "Check-out completado para la reserva #" + idReserva + ".\nFolio cerrado y habitación pasada a EN_PREPARACION.");
                 } else {
@@ -163,6 +199,7 @@ public class DashboardController {
 
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
                 reservaDAO.actualizarEstado(idReserva, "CANCELADA");
+                recargarTabla();
                 mostrarAlerta(event, Alert.AlertType.INFORMATION, "Cancelada",
                         "La reserva #" + idReserva + " fue marcada como CANCELADA en Oracle XE.");
             }

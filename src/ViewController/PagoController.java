@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import dao.FolioDAO;
 import dao.PagoDAO;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +18,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Pago;
 
@@ -25,6 +29,37 @@ public class PagoController {
 
     private final PagoDAO pagoDAO = new PagoDAO();
     private final FolioDAO folioDAO = new FolioDAO();
+
+    @FXML
+    private TableView<Pago> tablaPagos;
+    @FXML
+    private TableColumn<Pago, Number> colIdPago;
+    @FXML
+    private TableColumn<Pago, Number> colMonto;
+    @FXML
+    private TableColumn<Pago, String> colMedioPago;
+    @FXML
+    private TableColumn<Pago, LocalDateTime> colFechaPago;
+    @FXML
+    private TableColumn<Pago, Number> colIdReservaPago;
+
+    @FXML
+    private void initialize() {
+        colIdPago.setCellValueFactory(new PropertyValueFactory<>("idPago"));
+        colMonto.setCellValueFactory(new PropertyValueFactory<>("monto"));
+        colMedioPago.setCellValueFactory(new PropertyValueFactory<>("medioPago"));
+        colFechaPago.setCellValueFactory(new PropertyValueFactory<>("fechaPago"));
+        colIdReservaPago.setCellValueFactory(new PropertyValueFactory<>("idReserva"));
+        recargarTabla();
+    }
+
+    private void recargarTabla() {
+        try {
+            tablaPagos.setItems(FXCollections.observableArrayList(pagoDAO.listarTodos()));
+        } catch (SQLException e) {
+            mostrarAlerta(null, Alert.AlertType.ERROR, "No se pudieron cargar los pagos", e.getMessage());
+        }
+    }
 
     @FXML
     private void crearPago(ActionEvent event) {
@@ -64,6 +99,7 @@ public class PagoController {
             pago.setIdReserva(idReserva);
 
             Long idPagoGen = pagoDAO.registrarPago(pago);
+            recargarTabla();
             BigDecimal nuevoSaldo = folioDAO.calcularSaldoPendiente(idReserva);
 
             mostrarAlerta(event, Alert.AlertType.INFORMATION, "Pago Registrado",

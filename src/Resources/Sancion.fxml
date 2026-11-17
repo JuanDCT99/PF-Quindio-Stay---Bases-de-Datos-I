@@ -177,44 +177,16 @@
             </font>
         </Text>
         <TextField layoutX="531.0" layoutY="204.0" prefHeight="39.0" prefWidth="112.0" />
-        <TabPane layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0" style="-fx-background-color: #A5A583;" tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="ID">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Tipo">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Descripción">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Fecha">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Valor">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="idReserva">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="837.0" />
-                    </content>
-                </Tab>
-            <Tab text="idServicio">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="837.0" />
-               </content>
-            </Tab>
-            </tabs>
-        </TabPane>
+        <TableView fx:id="tablaSanciones" layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0">
+            <columns>
+                <TableColumn fx:id="colIdSancion" prefWidth="65.0" text="ID" />
+                <TableColumn fx:id="colTipoSancion" prefWidth="100.0" text="Tipo" />
+                <TableColumn fx:id="colDescripcionSancion" prefWidth="190.0" text="Descripción" />
+                <TableColumn fx:id="colFechaSancion" prefWidth="160.0" text="Fecha" />
+                <TableColumn fx:id="colValorSancion" prefWidth="100.0" text="Valor" />
+                <TableColumn fx:id="colIdReservaSancion" prefWidth="100.0" text="Reserva" />
+                <TableColumn fx:id="colIdServicioSancion" prefWidth="100.0" text="Servicio" />
+            </columns>
+        </TableView>
     </children>
 </AnchorPane>

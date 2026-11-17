@@ -177,31 +177,15 @@
             </font>
         </Text>
         <TextField layoutX="531.0" layoutY="204.0" prefHeight="39.0" prefWidth="112.0" />
-        <TabPane layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0" style="-fx-background-color: #A5A583;" tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="ID">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Nombre">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Nivel">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Pregunta">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
-        <ComboBox fx:id="cbReporte" layoutX="270.0" layoutY="235.0" prefHeight="39.0" prefWidth="250.0" />
+        <TableView fx:id="tablaReportes" layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0">
+            <columns>
+                <TableColumn fx:id="colIdReporte" prefWidth="70.0" text="ID" />
+                <TableColumn fx:id="colNombreReporte" prefWidth="200.0" text="Nombre" />
+                <TableColumn fx:id="colNivel" prefWidth="110.0" text="Nivel" />
+                <TableColumn fx:id="colPreguntaNegocio" prefWidth="450.0" text="Pregunta" />
+            </columns>
+        </TableView>
+        <ComboBox fx:id="cbReporte" layoutX="270.0" layoutY="235.0" prefHeight="39.0" prefWidth="250.0" onAction="#seleccionarReporte" />
         <Button fx:id="btnGenerar" layoutX="746.0" layoutY="205.0" mnemonicParsing="false" text="Generar PDF" onAction="#generarPDF" />
     </children>
 </AnchorPane>

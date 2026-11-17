@@ -165,34 +165,14 @@
             </font>
         </Text>
         <TextField layoutX="531.0" layoutY="204.0" prefHeight="39.0" prefWidth="112.0" />
-        <TabPane layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0" style="-fx-background-color: #A5A583;" tabClosingPolicy="UNAVAILABLE">
-            <tabs>
-                <Tab text="ID">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Monto">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="Medio Pago">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="FechaPago">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-                <Tab text="IdReserva">
-                    <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                    </content>
-                </Tab>
-            </tabs>
-        </TabPane>
+        <TableView fx:id="tablaPagos" layoutX="30.0" layoutY="274.0" prefHeight="264.0" prefWidth="837.0">
+            <columns>
+                <TableColumn fx:id="colIdPago" prefWidth="90.0" text="ID" />
+                <TableColumn fx:id="colMonto" prefWidth="140.0" text="Monto" />
+                <TableColumn fx:id="colMedioPago" prefWidth="150.0" text="Medio Pago" />
+                <TableColumn fx:id="colFechaPago" prefWidth="220.0" text="Fecha Pago" />
+                <TableColumn fx:id="colIdReservaPago" prefWidth="140.0" text="Reserva" />
+            </columns>
+        </TableView>
     </children>
 </AnchorPane>

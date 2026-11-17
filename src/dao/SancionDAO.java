@@ -61,6 +61,20 @@ public class SancionDAO {
         }
     }
 
+    public List<Sancion> listarTodos() throws SQLException {
+        List<Sancion> lista = new ArrayList<>();
+        String sql = "SELECT id_sancion, tipo_sancion, descripcion, fecha_sancion, valor, id_reserva, id_servicio "
+                   + "FROM Sancion ORDER BY fecha_sancion DESC, id_sancion DESC";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearSancion(rs));
+            }
+        }
+        return lista;
+    }
+
     public List<Sancion> listarPorReserva(Long idReserva) throws SQLException {
         List<Sancion> lista = new ArrayList<>();
         if (idReserva == null) {

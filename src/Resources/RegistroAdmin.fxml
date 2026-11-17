@@ -9,7 +9,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="background" prefHeight="580.0" prefWidth="1100.0" style="-fx-background-color: #A5A583;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ViewController.RegistroHuespedController">
+<AnchorPane fx:id="background" prefHeight="580.0" prefWidth="1100.0" style="-fx-background-color: #A5A583;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ViewController.RegistroAdminController">
     <children>
         <ImageView fx:id="imgFondo" fitHeight="585.0" fitWidth="875.0" pickOnBounds="true" preserveRatio="true">
             <image>

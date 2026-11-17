@@ -47,7 +47,7 @@ public class FolioDAO {
 
     /**
      * Calcula el balance financiero exacto de la reserva:
-     * Saldo = (Precio Total Reserva + Total Servicios + Total Sanciones) - Total Pagos.
+     * Saldo = (Precio Total Reserva + Total Sanciones) - Total Pagos.
      *
      * @param idReserva Identificador de la reserva.
      * @return Saldo pendiente de pago (BigDecimal).
@@ -63,12 +63,6 @@ public class FolioDAO {
                    + "    SELECT NVL(SUM(monto), 0) AS total_pagado FROM Pago WHERE id_reserva = ?"
                    + "), TotSanciones AS ("
                    + "    SELECT NVL(SUM(valor), 0) AS total_sanciones FROM Sancion WHERE id_reserva = ?"
-                   + "), TotServicios AS ("
-                   + "    SELECT NVL(SUM(s.hora_apertura), 0) AS total_servicios " // placeholder o join de servicios
-                   + "    FROM Uso_Servicio u "
-                   + "    JOIN Reserva_Habitacion rh ON u.id_reserva_habitacion = rh.id_reserva_habitacion "
-                   + "    JOIN Servicio s ON u.id_servicio = s.id_servicio "
-                   + "    WHERE rh.id_reserva = ?"
                    + ") "
                    + "SELECT (r.total_hospedaje + san.total_sanciones - p.total_pagado) AS saldo_pendiente "
                    + "FROM TotReserva r, TotPagos p, TotSanciones san";
@@ -78,7 +72,6 @@ public class FolioDAO {
             ps.setLong(1, idReserva);
             ps.setLong(2, idReserva);
             ps.setLong(3, idReserva);
-            ps.setLong(4, idReserva);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     BigDecimal saldo = rs.getBigDecimal("saldo_pendiente");

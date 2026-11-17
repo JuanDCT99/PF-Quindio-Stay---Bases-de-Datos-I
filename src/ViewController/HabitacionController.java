@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import dao.HabitacionDAO;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,13 +16,53 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Habitacion;
 
 public class HabitacionController {
 
     private final HabitacionDAO habitacionDAO = new HabitacionDAO();
+
+    @FXML
+    private TableView<Habitacion> tablaHabitaciones;
+    @FXML
+    private TableColumn<Habitacion, Number> colIdHabitacion;
+    @FXML
+    private TableColumn<Habitacion, String> colNumeroHabitacion;
+    @FXML
+    private TableColumn<Habitacion, Number> colCapacidadMaxima;
+    @FXML
+    private TableColumn<Habitacion, String> colDescripcion;
+    @FXML
+    private TableColumn<Habitacion, String> colEstadoOperativo;
+    @FXML
+    private TableColumn<Habitacion, Number> colIdTipoHabitacion;
+    @FXML
+    private TableColumn<Habitacion, Number> colIdAlojamiento;
+
+    @FXML
+    private void initialize() {
+        colIdHabitacion.setCellValueFactory(new PropertyValueFactory<>("idHabitacion"));
+        colNumeroHabitacion.setCellValueFactory(new PropertyValueFactory<>("numeroHabitacion"));
+        colCapacidadMaxima.setCellValueFactory(new PropertyValueFactory<>("capacidadMaxima"));
+        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colEstadoOperativo.setCellValueFactory(new PropertyValueFactory<>("estadoOperativo"));
+        colIdTipoHabitacion.setCellValueFactory(new PropertyValueFactory<>("idTipoHabitacion"));
+        colIdAlojamiento.setCellValueFactory(new PropertyValueFactory<>("idAlojamiento"));
+        recargarTabla();
+    }
+
+    private void recargarTabla() {
+        try {
+            tablaHabitaciones.setItems(FXCollections.observableArrayList(habitacionDAO.listarTodas()));
+        } catch (SQLException e) {
+            mostrarAlerta(null, Alert.AlertType.ERROR, "No se pudieron cargar las habitaciones", e.getMessage());
+        }
+    }
 
     @FXML
     private void crearHabitacion(ActionEvent event) {
@@ -61,6 +102,7 @@ public class HabitacionController {
             h.setIdAlojamiento(1L); // Alojamiento principal
 
             Long idGen = habitacionDAO.crearHabitacion(h);
+            recargarTabla();
 
             mostrarAlerta(event, Alert.AlertType.INFORMATION, "Habitación Creada",
                     "Habitación #" + h.getNumeroHabitacion() + " (ID: " + idGen + ") registrada en Oracle XE.\n"
@@ -98,6 +140,7 @@ public class HabitacionController {
             if (nuevoEstado.isEmpty()) return;
 
             habitacionDAO.cambiarEstadoOperativo(idHab, nuevoEstado.get());
+            recargarTabla();
             mostrarAlerta(event, Alert.AlertType.INFORMATION, "Estado Actualizado",
                     "La habitación " + h.getNumeroHabitacion() + " ahora está en estado: " + nuevoEstado.get());
 
@@ -134,6 +177,7 @@ public class HabitacionController {
             if (resp.isPresent() && resp.get() == ButtonType.OK) {
                 try {
                     habitacionDAO.eliminarHabitacion(idHab);
+                    recargarTabla();
                     mostrarAlerta(event, Alert.AlertType.INFORMATION, "Eliminada", "Habitación eliminada de Oracle XE.");
                 } catch (SQLException e) {
                     mostrarAlerta(event, Alert.AlertType.WARNING, "Restricción Referencial",

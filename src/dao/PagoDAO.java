@@ -51,6 +51,19 @@ public class PagoDAO {
         }
     }
 
+    public List<Pago> listarTodos() throws SQLException {
+        List<Pago> lista = new ArrayList<>();
+        String sql = "SELECT id_pago, monto, medio_pago, fecha_pago, id_reserva FROM Pago ORDER BY fecha_pago DESC, id_pago DESC";
+        try (Connection conn = ConexionBD.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                lista.add(mapearPago(rs));
+            }
+        }
+        return lista;
+    }
+
     public List<Pago> listarPorReserva(Long idReserva) throws SQLException {
         List<Pago> lista = new ArrayList<>();
         if (idReserva == null) {
