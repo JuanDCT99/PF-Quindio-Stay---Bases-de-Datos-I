@@ -328,19 +328,19 @@ VALUES (1006, 'CONFIRMADA', CURRENT_TIMESTAMP, TO_TIMESTAMP('2026-05-15 15:00:00
 -- =====================================================================
 -- 16. RESERVA_HABITACION
 -- =====================================================================
-INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, checkin_real, checkout_real, noches_adicionales, id_reserva, id_habitacion)
+INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, CHECKIN_REAL, CHECKOUT_REAL, noches_adicionales, id_reserva, id_habitacion)
 VALUES (1, TO_DATE('2026-02-10', 'YYYY-MM-DD'), TO_DATE('2026-02-13', 'YYYY-MM-DD'), 320000, TO_TIMESTAMP('2026-02-10 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-02-12 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), 0, 1002, 2);
 
-INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, checkin_real, checkout_real, noches_adicionales, id_reserva, id_habitacion)
+INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, CHECKIN_REAL, CHECKOUT_REAL, noches_adicionales, id_reserva, id_habitacion)
 VALUES (2, TO_DATE('2026-02-10', 'YYYY-MM-DD'), TO_DATE('2026-02-13', 'YYYY-MM-DD'), 320000, TO_TIMESTAMP('2026-02-10 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-02-12 13:00:00', 'YYYY-MM-DD HH24:MI:SS'), 0, 1002, 3);
 
-INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, checkin_real, checkout_real, noches_adicionales, id_reserva, id_habitacion)
+INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, CHECKIN_REAL, CHECKOUT_REAL, noches_adicionales, id_reserva, id_habitacion)
 VALUES (3, TO_DATE('2026-03-01', 'YYYY-MM-DD'), TO_DATE('2026-03-05', 'YYYY-MM-DD'), 550000, TO_TIMESTAMP('2026-03-01 14:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-03-04 11:00:00', 'YYYY-MM-DD HH24:MI:SS'), 0, 1003, 7);
 
-INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, checkin_real, checkout_real, noches_adicionales, id_reserva, id_habitacion)
+INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, CHECKIN_REAL, CHECKOUT_REAL, noches_adicionales, id_reserva, id_habitacion)
 VALUES (4, TO_DATE('2026-04-05', 'YYYY-MM-DD'), TO_DATE('2026-04-08', 'YYYY-MM-DD'), 550000, TO_TIMESTAMP('2026-04-05 16:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-04-07 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), 0, 1004, 8);
 
-INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, checkin_real, checkout_real, noches_adicionales, id_reserva, id_habitacion)
+INSERT INTO Reserva_Habitacion (id_reserva_habitacion, fecha_entrada_reservada, fecha_salida_reservada, precio_noche_pactado, CHECKIN_REAL, CHECKOUT_REAL, noches_adicionales, id_reserva, id_habitacion)
 VALUES (5, TO_DATE('2026-05-15', 'YYYY-MM-DD'), TO_DATE('2026-05-18', 'YYYY-MM-DD'), 240000, TO_TIMESTAMP('2026-05-15 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-05-17 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), 0, 1006, 9);
 
 -- =====================================================================
@@ -436,19 +436,19 @@ VALUES (9, 'Waiter service', 'SERVICIO_HABITACION', '00:00:00', '23:59:59', 'N',
 -- =====================================================================
 -- 22. USO_SERVICIO
 -- =====================================================================
-INSERT INTO Uso_Servicio (id_uso_servicio, fecha_hora_inicio, fecha_hora_fin, solicitud, id_reserva_habitacion, id_servicio, id_personal)
+INSERT INTO Uso_Servicio (id_uso_servicio, FECHA_HORA_INICIO, FECHA_HORA_FIN, solicitud, id_reserva_habitacion, id_servicio, id_personal)
 VALUES (1, TO_TIMESTAMP('2026-02-10 16:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-02-10 17:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Desayuno en la habitación', 1, 6, 2);
 
-INSERT INTO Uso_Servicio (id_uso_servicio, fecha_hora_inicio, fecha_hora_fin, solicitud, id_reserva_habitacion, id_servicio, id_personal)
+INSERT INTO Uso_Servicio (id_uso_servicio, FECHA_HORA_INICIO, FECHA_HORA_FIN, solicitud, id_reserva_habitacion, id_servicio, id_personal)
 VALUES (2, TO_TIMESTAMP('2026-04-05 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-04-06 15:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Piscina y spa', 4, 1, 1);
 
-INSERT INTO Uso_Servicio (id_uso_servicio, fecha_hora_inicio, fecha_hora_fin, solicitud, id_reserva_habitacion, id_servicio, id_personal)
+INSERT INTO Uso_Servicio (id_uso_servicio, FECHA_HORA_INICIO, FECHA_HORA_FIN, solicitud, id_reserva_habitacion, id_servicio, id_personal)
 VALUES (3, TO_TIMESTAMP('2026-04-05 14:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-04-05 17:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Spa y jacuzzi', 4, 2, 1);
 
-INSERT INTO Uso_Servicio (id_uso_servicio, fecha_hora_inicio, fecha_hora_fin, solicitud, id_reserva_habitacion, id_servicio, id_personal)
+INSERT INTO Uso_Servicio (id_uso_servicio, FECHA_HORA_INICIO, FECHA_HORA_FIN, solicitud, id_reserva_habitacion, id_servicio, id_personal)
 VALUES (4, TO_TIMESTAMP('2026-04-06 10:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-04-06 12:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Servicios a la habitación', 4, 6, 8);
 
-INSERT INTO Uso_Servicio (id_uso_servicio, fecha_hora_inicio, fecha_hora_fin, solicitud, id_reserva_habitacion, id_servicio, id_personal)
+INSERT INTO Uso_Servicio (id_uso_servicio, FECHA_HORA_INICIO, FECHA_HORA_FIN, solicitud, id_reserva_habitacion, id_servicio, id_personal)
 VALUES (5, TO_TIMESTAMP('2026-02-11 08:00:00', 'YYYY-MM-DD HH24:MI:SS'), TO_TIMESTAMP('2026-02-11 09:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'Bloqueo de uso', 1, 8, 7);
 
 -- =====================================================================
@@ -553,16 +553,16 @@ VALUES (4, CURRENT_TIMESTAMP, 'PDF', 10, 1);
 -- =====================================================================
 -- 30. PERFIL_CLIENTE
 -- =====================================================================
-INSERT INTO Perfil_Cliente (id_perfil_cliente, viaja_con_mascotas, desea_desayuno, observaciones, id_huesped, id_tipo_habitacion)
+INSERT INTO Perfil_Cliente (id_perfil_cliente, VIAJA_CON_MASCOTA, DESEA_DESAYUNO, observaciones, id_huesped, id_tipo_habitacion)
 VALUES (1, 'S', 'S', 'Prefiere habitación tranquila, lleva perro', 1, 1);
 
-INSERT INTO Perfil_Cliente (id_perfil_cliente, viaja_con_mascotas, desea_desayuno, observaciones, id_huesped, id_tipo_habitacion)
+INSERT INTO Perfil_Cliente (id_perfil_cliente, VIAJA_CON_MASCOTA, DESEA_DESAYUNO, observaciones, id_huesped, id_tipo_habitacion)
 VALUES (2, 'N', 'S', 'Prefiere desayuno incluido', 2, 2);
 
-INSERT INTO Perfil_Cliente (id_perfil_cliente, viaja_con_mascotas, desea_desayuno, observaciones, id_huesped, id_tipo_habitacion)
+INSERT INTO Perfil_Cliente (id_perfil_cliente, VIAJA_CON_MASCOTA, DESEA_DESAYUNO, observaciones, id_huesped, id_tipo_habitacion)
 VALUES (3, 'N', 'N', NULL, 3, 3);
 
-INSERT INTO Perfil_Cliente (id_perfil_cliente, viaja_con_mascotas, desea_desayuno, observaciones, id_huesped, id_tipo_habitacion)
+INSERT INTO Perfil_Cliente (id_perfil_cliente, VIAJA_CON_MASCOTA, DESEA_DESAYUNO, observaciones, id_huesped, id_tipo_habitacion)
 VALUES (4, 'N', 'S', 'Requiere habitación adaptable', 4, 4);
 
 -- =====================================================================
