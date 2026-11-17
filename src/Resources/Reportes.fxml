@@ -18,7 +18,7 @@
                         <Image url="@Logo.png" />
                     </image>
                 </ImageView>
-                <Text fill="#fdfbd4" layoutX="136.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Jucamer Stay">
+                <Text fill="#fdfbd4" layoutX="136.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="QuindíoStay">
                     <font>
                         <Font name="System Bold" size="18.0" />
                     </font>
@@ -104,18 +104,18 @@
                         </Lighting>
                     </effect>
                 </Button>
-            <Button fx:id="btnPerfil1" layoutX="23.0" layoutY="504.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Reservas" onAction="#irAReservas">
-               <effect>
-                  <Lighting diffuseConstant="1.4">
-                     <bumpInput>
-                        <Shadow />
-                     </bumpInput>
-                     <light>
-                        <Light.Distant />
-                     </light>
-                  </Lighting>
-               </effect>
-            </Button>
+                <Button fx:id="btnPerfil1" layoutX="23.0" layoutY="504.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="153.0" style="-fx-background-color: #F6f2e6;" text="Reservas" onAction="#irAReservas">
+                    <effect>
+                        <Lighting diffuseConstant="1.4">
+                            <bumpInput>
+                                <Shadow />
+                            </bumpInput>
+                            <light>
+                                <Light.Distant />
+                            </light>
+                        </Lighting>
+                    </effect>
+                </Button>
             </children>
         </AnchorPane>
         <AnchorPane layoutX="293.0" layoutY="25.0" prefHeight="151.0" prefWidth="572.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;">
@@ -160,7 +160,7 @@
                 </Button>
             </children>
         </AnchorPane>
-        <Text fill="#6b6b52" layoutX="27.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reportes ">
+        <Text fill="#6b6b52" layoutX="27.0" layoutY="233.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reportes">
             <font>
                 <Font name="System Bold" size="25.0" />
             </font>
@@ -201,6 +201,7 @@
                 </Tab>
             </tabs>
         </TabPane>
-      <Button fx:id="btnGenerar" layoutX="746.0" layoutY="205.0" mnemonicParsing="false" text="Generar" />
+        <ComboBox fx:id="cbReporte" layoutX="270.0" layoutY="235.0" prefHeight="39.0" prefWidth="250.0" />
+        <Button fx:id="btnGenerar" layoutX="746.0" layoutY="205.0" mnemonicParsing="false" text="Generar PDF" onAction="#generarPDF" />
     </children>
 </AnchorPane>

@@ -121,7 +121,7 @@
         <AnchorPane layoutX="293.0" layoutY="25.0" prefHeight="151.0" prefWidth="572.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;">
             <children>
                 <Text layoutX="40.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pago Seleccionado" wrappingWidth="112.0517578125" />
-                <Button layoutX="251.0" layoutY="30.0" mnemonicParsing="false" style="-fx-background-color: #ffde21;" text="Editar">
+                <Button fx:id="btnConsultar" layoutX="240.0" layoutY="30.0" mnemonicParsing="false" onAction="#consultarSaldo" style="-fx-background-color: #ffde21;" text="Consultar Saldo">
                     <effect>
                         <Lighting diffuseConstant="1.53" specularConstant="0.76">
                             <bumpInput>
@@ -133,20 +133,8 @@
                         </Lighting>
                     </effect>
                 </Button>
-                <Button layoutX="242.0" layoutY="84.0" mnemonicParsing="false" style="-fx-background-color: #722f37;" text="Eliminar" textFill="WHITE">
-                    <effect>
-                        <Lighting diffuseConstant="1.84" specularConstant="0.33">
-                            <bumpInput>
-                                <Shadow />
-                            </bumpInput>
-                            <light>
-                                <Light.Distant />
-                            </light>
-                        </Lighting>
-                    </effect>
-                </Button>
-                <Text layoutX="417.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nueva Pago" wrappingWidth="125.0517578125" />
-                <Button layoutX="441.0" layoutY="69.0" mnemonicParsing="false" style="-fx-background-color: #57a733;" text="Crear" textFill="WHITE">
+                <Text layoutX="417.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Registrar Pago" wrappingWidth="125.0517578125" />
+                <Button fx:id="btnCrear" layoutX="441.0" layoutY="69.0" mnemonicParsing="false" onAction="#crearPago" style="-fx-background-color: #57a733;" text="Pagar" textFill="WHITE">
                     <effect>
                         <Lighting diffuseConstant="1.58" specularConstant="0.76">
                             <bumpInput>

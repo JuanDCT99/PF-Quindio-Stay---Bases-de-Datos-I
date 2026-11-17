@@ -122,7 +122,7 @@
       <AnchorPane layoutX="293.0" layoutY="25.0" prefHeight="151.0" prefWidth="572.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000;">
          <children>
             <Text layoutX="40.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reserva Seleccionada" wrappingWidth="112.0517578125" />
-            <Button layoutX="251.0" layoutY="30.0" mnemonicParsing="false" style="-fx-background-color: #ffde21;" text="Editar">
+            <Button fx:id="btnEditar" layoutX="251.0" layoutY="30.0" mnemonicParsing="false" onAction="#editarReserva" style="-fx-background-color: #ffde21;" text="Check-In/Out">
                <effect>
                   <Lighting diffuseConstant="1.53" specularConstant="0.76">
                      <bumpInput>
@@ -134,7 +134,7 @@
                   </Lighting>
                </effect>
             </Button>
-            <Button layoutX="242.0" layoutY="84.0" mnemonicParsing="false" style="-fx-background-color: #722f37;" text="Eliminar" textFill="WHITE">
+            <Button fx:id="btnEliminar" layoutX="242.0" layoutY="84.0" mnemonicParsing="false" onAction="#cancelarReserva" style="-fx-background-color: #722f37;" text="Cancelar" textFill="WHITE">
                <effect>
                   <Lighting diffuseConstant="1.84" specularConstant="0.33">
                      <bumpInput>
@@ -147,7 +147,7 @@
                </effect>
             </Button>
             <Text layoutX="417.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nueva Reserva" wrappingWidth="125.0517578125" />
-            <Button layoutX="441.0" layoutY="69.0" mnemonicParsing="false" style="-fx-background-color: #57a733;" text="Crear" textFill="WHITE">
+            <Button fx:id="btnCrear" layoutX="441.0" layoutY="69.0" mnemonicParsing="false" onAction="#crearReserva" style="-fx-background-color: #57a733;" text="Crear" textFill="WHITE">
                <effect>
                   <Lighting diffuseConstant="1.58" specularConstant="0.76">
                      <bumpInput>
